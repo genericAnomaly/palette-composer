@@ -13,32 +13,18 @@
  * Do not rename this tab!
  * =========================================================
  */
+ //Note: I broke the connection between this file and the GUI editor 'cos I created it with really bad event handler registration that it wouldn't let me revert so I had to change the code by hand.
 
-public void onEventPBase(GPanel source, GEvent event) { //_CODE_:pBase:885325:
+public void onPanelEvent(GPanel source, GEvent event) { //_CODE_:pBase:885325:
   println("panelBase - GPanel >> GEvent." + event + " @ " + millis());
 } //_CODE_:pBase:885325:
 
-public void onEventPPreview(GPanel source, GEvent event) { //_CODE_:pPreview:334206:
-  println("pPreview - GPanel >> GEvent." + event + " @ " + millis());
-} //_CODE_:pPreview:334206:
-
-public void onEventPChannels(GPanel source, GEvent event) { //_CODE_:pChannels:996832:
-  println("pPalettes - GPanel >> GEvent." + event + " @ " + millis());
-} //_CODE_:pChannels:996832:
-
-public void onEventPEditor(GPanel source, GEvent event) { //_CODE_:pEditor:621850:
-  println("pComposer - GPanel >> GEvent." + event + " @ " + millis());
-} //_CODE_:pEditor:621850:
-
-public void onEventBLoadSprite(GButton source, GEvent event) { //_CODE_:bLoadSprite:672881:
+public void onButtonEvent(GButton source, GEvent event) { //_CODE_:bLoadSprite:672881:
   println("bLoadSprite - GButton >> GEvent." + event + " @ " + millis());
-  selectInput("Select sprite to load", "onLoadSpriteSelected");
+  if (source == bLoadSprite) selectInput("Select sprite to load", "onLoadSpriteSelected");
+  if (source == bLoadJSON) selectInput("Select palette file to load", "onLoadJSONSelected");
 } //_CODE_:bLoadSprite:672881:
 
-public void onEventBLoadJSON(GButton source, GEvent event) { //_CODE_:bLoadJSON:243806:
-  println("bLoadJSON - GButton >> GEvent." + event + " @ " + millis());
-  selectInput("Select palette file to load", "onLoadJSONSelected");
-} //_CODE_:bLoadJSON:243806:
 
 
 
@@ -56,7 +42,7 @@ public void createGUI(){
   pBase.setText("Sprite Base");
   pBase.setTextBold();
   pBase.setOpaque(true);
-  pBase.addEventHandler(this, "onEventPBase");
+  pBase.addEventHandler(this, "onPanelEvent");
   sBase = new GSketchPad(this, 0, 20, 160, 140);
   pBase.addControl(sBase);
   pPreview = new GPanel(this, 160, 0, 160, 160, "Sprite Preview");
@@ -65,7 +51,7 @@ public void createGUI(){
   pPreview.setText("Sprite Preview");
   pPreview.setTextBold();
   pPreview.setOpaque(true);
-  pPreview.addEventHandler(this, "onEventPPreview");
+  pPreview.addEventHandler(this, "onPanelEvent");
   sPreview = new GSketchPad(this, 0, 20, 160, 140);
   pPreview.addControl(sPreview);
   pChannels = new GPanel(this, 0, 160, 640, 160, "Channel Manager");
@@ -73,19 +59,19 @@ public void createGUI(){
   pChannels.setDraggable(false);
   pChannels.setText("Channel Manager");
   pChannels.setOpaque(true);
-  pChannels.addEventHandler(this, "onEventPChannels");
+  pChannels.addEventHandler(this, "onPanelEvent");
   pEditor = new GPanel(this, 320, 0, 320, 160, "Palette Editor");
   pEditor.setCollapsible(false);
   pEditor.setDraggable(false);
   pEditor.setText("Palette Editor");
   pEditor.setOpaque(true);
-  pEditor.addEventHandler(this, "onEventPEditor");
+  pEditor.addEventHandler(this, "onPanelEvent");
   bLoadSprite = new GButton(this, 0, 320, 160, 32);
   bLoadSprite.setText("Load Sprite Base");
-  bLoadSprite.addEventHandler(this, "onEventBLoadSprite");
+  bLoadSprite.addEventHandler(this, "onButtonEvent");
   bLoadJSON = new GButton(this, 160, 320, 160, 32);
   bLoadJSON.setText("Load Palette File");
-  bLoadJSON.addEventHandler(this, "onEventBLoadJSON");
+  bLoadJSON.addEventHandler(this, "onButtonEvent");
 }
 
 // Variable declarations 
