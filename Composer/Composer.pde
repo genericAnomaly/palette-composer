@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 PImage baseSprite;
 ArrayList<Channel> channels;
-
+ArrayList<GPanel> channelPanels;
 
 public void setup(){
   size(640, 480, JAVA2D);
@@ -103,8 +103,48 @@ public void loadJSON(JSONObject json) {
     channels.add( new Channel(channel, jarray) );
   }
   
+  //TODO: this loop's debug, pull it any time
   for (Channel c : channels) {
     println(c);
+  }
+  
+  clearChannelPanels();
+  channelPanels = new ArrayList<GPanel>( channels.size() );
+  for (int i=0; i<channels.size(); i++) {
+    GPanel panel = new GPanel(this, 0, 20+i*48, 640, 52, channels.get(i).name);
+    panel.setDraggable(false);
+    panel.setLocalColorScheme(GCScheme.ORANGE_SCHEME);
+    panel.setOpaque(true);
+    panel.addEventHandler(this, "onChannelPanelEvent");
+    pChannels.addControl(panel);
+    channelPanels.add(panel);
+  }
+  arrangeChannelPanels();
+}
+
+public void onChannelPanelEvent(GPanel source, GEvent event) {
+  println("panelBase - GPanel >> GEvent." + event + " @ " + millis());
+  println("source.getX() = " + source.getX() + ", source.getY() = " + source.getY());
+  arrangeChannelPanels();
+}
+
+public void clearChannelPanels() {
+  if (channelPanels == null) return;
+  for (GPanel panel : channelPanels) panel.dispose();
+  channelPanels = null;
+}
+
+public void arrangeChannelPanels() {
+  println("Attempting to arrange ChannelPanels");
+  int y = 20;
+  for (GPanel panel : channelPanels) {
+    println("Moving panel to y=" + y);
+    panel.moveTo(0, y);
+    if (panel.isCollapsed()) {
+      y += 20;
+    } else {
+      y += panel.getHeight();
+    }
   }
 }
 
@@ -114,7 +154,6 @@ public void loadJSON(JSONObject json) {
 void fill(Color c) {
   fill( c.getRed(), c.getBlue(), c.getGreen() );
 }
-
 
 
 
