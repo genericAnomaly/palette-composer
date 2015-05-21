@@ -1,41 +1,203 @@
-// Need G4P library
-import g4p_controls.*;
+import java.awt.event.*;
+import java.awt.Dimension;
 import java.awt.Color;
+
+import javax.swing.JRootPane;
+import javax.swing.JFrame;
+
 import java.util.ArrayList;
 
+import controlP5.*;
+
+
+//UI Constants
+int LAYOUT_SIZE_GUTTER = 6;
+int LAYOUT_SIZE_TOOLBAR = 20;
+int LAYOUT_MINIMUM_WIDTH = 640;
+int LAYOUT_MINIMUM_HEIGHT = 480;
+
+int LAYOUT_IMAGE_GUTTER = 8;
+
+int LAYOUT_COLOR_BG = 80;
+int LAYOUT_COLOR_PANELS = 96;
+int LAYOUT_COLOR_TOOLBAR = 127;
+
+
+//ControlP5 UI Elements
+ControlP5 cp5;
+
+Group gToolbar;
+Group gBase;
+Group gPreview;
+Group gMixer;
+Group gChannels;
+
+ImageControl iBase;
+ImageControl iPreview;
+
+Button bSave;
+Button bLoadImage;
+Button bLoadJSON;
+
+
+//Vars
 PImage baseSprite;
 ArrayList<Channel> channels;
-ArrayList<GPanel> channelPanels;
 
 public void setup(){
-  size(640, 480, JAVA2D);
-  createGUI();
-  customGUI();
-  // Place your setup code here
+  //Size the frame
+  size(640, 480);
   
+  //Build the UI
+  buildUIElements();
   
+  //Set up frame junk if we have one
+  if (frame != null) {
+    frame.setTitle("Palette Composer");
+    frame.setResizable(true);
+    frame.setMinimumSize(new Dimension(LAYOUT_MINIMUM_WIDTH, LAYOUT_MINIMUM_HEIGHT));
+    frame.addComponentListener(new FrameListener());
+    
+    JRootPane pane = ( (JFrame) frame).getRootPane();
+    sortUIElements( pane.getWidth(), pane.getHeight() );
+  }
   
 }
 
-public void draw(){
-  background(96);
-  //if (baseSprite != null) sBase.setGraphic(baseSprite);
-}
 
-// Use this method to add additional statements
-// to customise the GUI controls
-public void customGUI(){
-
+void draw() {
+  background(LAYOUT_COLOR_BG);
+  
 }
 
 
+
+public void buildUIElements () {
+  //Create CP5
+  cp5 = new ControlP5(this);
+  cp5.enableShortcuts();
+  
+  //Toolbar  ===================================================
+  gToolbar = cp5.addGroup("Toolbar");
+  gToolbar.hideBar();
+  gToolbar.disableCollapse();
+  gToolbar.setMoveable(false);
+  gToolbar.setBackgroundColor(LAYOUT_COLOR_TOOLBAR);
+  
+  bLoadImage = cp5.addButton("Load Sprite");
+  bLoadImage.setPosition(8, 0);
+  bLoadImage.setGroup(gToolbar);
+  
+  bLoadJSON = cp5.addButton("Load JSON");
+  bLoadJSON.setPosition(88, 0);
+  bLoadJSON.setGroup(gToolbar);
+  
+  bSave = cp5.addButton("Save JSON");
+  //   .setImages(imgs)
+  //   .updateSize()
+  bSave.setPosition(168, 0);
+  bSave.setGroup(gToolbar);
+    
+  
+  //Base Sprite Panel  =========================================
+  gBase = cp5.addGroup("Base Sprite");
+  gBase.setBackgroundColor(LAYOUT_COLOR_PANELS);
+  gBase.disableCollapse();
+  gBase.setMoveable(false);
+  
+  //Base Sprite Image Control
+  iBase = new ImageControl();
+//  iBase.enableShadow(true);
+  //iBase.setImage(loadImage("kirhos.png"));
+  gBase.addCanvas(iBase);
+
+  
+  //Preview Sprite Panel  ======================================
+  gPreview = cp5.addGroup("Preview Sprite");
+  gPreview.setBackgroundColor(LAYOUT_COLOR_PANELS);
+  gPreview.disableCollapse();
+  gPreview.setMoveable(false);
+  
+  //Preview Sprite Image Control
+  iPreview = new ImageControl();
+  gPreview.addCanvas(iPreview);
+  
+  
+  //Mixer Panel   ==============================================
+  gMixer = cp5.addGroup("Palette Mixer");
+  gMixer.setBackgroundColor(LAYOUT_COLOR_PANELS);
+  gMixer.disableCollapse();
+  gMixer.setMoveable(false);
+  
+  
+  //Channel Manager Panel  =====================================
+  gChannels = cp5.addGroup("Channel Manager");
+  gChannels.setBackgroundColor(LAYOUT_COLOR_PANELS);
+  gChannels.disableCollapse();
+  gChannels.setMoveable(false);
+  
+  
+  sortUIElements(width, height);
+}
+
+
+
+
+public void sortUIElements(int paneWidth, int paneHeight) {
+  //Calculate common size values
+  float panelThird = (paneWidth - 4*LAYOUT_SIZE_GUTTER)/10;
+  int panelSide = floor(3*panelThird);
+  int panelTop = LAYOUT_SIZE_GUTTER + LAYOUT_SIZE_TOOLBAR + gBase.getBarHeight();
+  int channelManTop = panelTop + panelSide + LAYOUT_SIZE_GUTTER + gChannels.getBarHeight();
+  
+  //Toolbar
+  gToolbar.setPosition(0, 0);
+  gToolbar.setSize(paneWidth, LAYOUT_SIZE_TOOLBAR );
+  
+  //Base Sprite Panel
+  gBase.setPosition(LAYOUT_SIZE_GUTTER, panelTop );
+  gBase.setSize(panelSide, panelSide);
+  iBase.setSize(panelSide, panelSide);
+  
+  //Preview Sprite Panel
+  gPreview.setPosition(LAYOUT_SIZE_GUTTER*2 + panelSide, panelTop);
+  gPreview.setSize(panelSide, panelSide);
+  iPreview.setSize(panelSide, panelSide);
+  
+  //Mixer Panel
+  gMixer.setPosition(LAYOUT_SIZE_GUTTER*3 + 2*panelSide, panelTop);
+  gMixer.setSize( floor(4*panelThird), panelSide);
+  
+  //Channel Manager Panel
+  gChannels.setPosition(LAYOUT_SIZE_GUTTER, channelManTop);
+  gChannels.setSize(LAYOUT_SIZE_GUTTER*2 + 2*panelSide + floor(4*panelThird), 160); //force alignment with Mixer panel
+  
+}
+
+
+
+
+
+
+
+public void controlEvent(ControlEvent theEvent) {
+  //println(theEvent.getController());
+  if (theEvent.getController() == bLoadImage) selectInput("Select sprite to load", "onLoadSpriteSelected"); 
+  if (theEvent.getController() == bLoadJSON)selectInput("Select palette file to load", "onLoadJSONSelected");
+}
 
 public void onLoadSpriteSelected(File f) {
   //Abort if cancelled
   if (f == null) return;
   //Load the file
-  baseSprite = loadImage(f.getAbsolutePath());
-  imageToSketchpad(baseSprite, sBase);
+  try {
+    baseSprite = loadImage(f.getAbsolutePath());
+  } catch (Exception e) {
+    //TODO: Error message in a modal dialog box
+    println("[ERROR] Exception occurred while attempting to load your image. Please make sure your file is valid and try again.");
+    return;
+  }
+  iBase.setImage(baseSprite);
 }
 
 public void onLoadJSONSelected(File f) {
@@ -47,42 +209,11 @@ public void onLoadJSONSelected(File f) {
     loadJSON(json);
   } catch (Exception e) {
     //TODO: Change this to pop up a dialog box
-    println("An error occured while attempting to load your channels! Check your JSON and try again. Exception report printed to stderr.");
-    e.printStackTrace();
+    println("[ERROR] Exception occured while attempting to load your channels! Please make sure your file is valid and try again.");
+    //e.printStackTrace();
     return;
   }
 }
-
-public void imageToSketchpad(PImage sprite, GSketchPad pad) {
-  PGraphics pg = createGraphics((int) pad.getWidth(), (int) pad.getHeight());
-  //Figure out what scale will fill the panel
-  float scaleX = pg.width/sprite.width;
-  float scaleY = pg.height/sprite.height;
-  //For scales above 100%, use multiples of 100% only!
-  if (scaleX>1) scaleX = floor(scaleX);
-  if (scaleY>1) scaleY = floor(scaleY); 
-  //Preserve aspect ratio by choosing the smallest scale possible
-  float scaleBoth = scaleX;
-  if (scaleY < scaleX) scaleBoth = scaleY;
-  //Draw it to the PGraphics object
-  pg.beginDraw();
-  //noSmooth is critical, otherwise scaling up causes interpolation, the WORST THING IN THE WORLD
-  if (scaleBoth>1) pg.noSmooth();
-  //Draw it to the center (that's all that ugly as doubleheck math is for)
-  pg.image(sprite, (pg.width-sprite.width*scaleBoth)/2, (pg.height-sprite.height*scaleBoth)/2, sprite.width*scaleBoth, sprite.height*scaleBoth);
-  pg.endDraw();
-  //Send it to the sketchpad
-  pad.setGraphic(pg);
-}
-
-
-
-
-
-
-
-
-
 
 
 public void loadJSON(JSONObject json) {
@@ -108,6 +239,7 @@ public void loadJSON(JSONObject json) {
     println(c);
   }
   
+  /*
   clearChannelPanels();
   channelPanels = new ArrayList<GPanel>( channels.size() );
   for (int i=0; i<channels.size(); i++) {
@@ -120,34 +252,9 @@ public void loadJSON(JSONObject json) {
     channelPanels.add(panel);
   }
   arrangeChannelPanels();
+  */
+  
 }
-
-public void onChannelPanelEvent(GPanel source, GEvent event) {
-  println("panelBase - GPanel >> GEvent." + event + " @ " + millis());
-  println("source.getX() = " + source.getX() + ", source.getY() = " + source.getY());
-  arrangeChannelPanels();
-}
-
-public void clearChannelPanels() {
-  if (channelPanels == null) return;
-  for (GPanel panel : channelPanels) panel.dispose();
-  channelPanels = null;
-}
-
-public void arrangeChannelPanels() {
-  println("Attempting to arrange ChannelPanels");
-  int y = 20;
-  for (GPanel panel : channelPanels) {
-    println("Moving panel to y=" + y);
-    panel.moveTo(0, y);
-    if (panel.isCollapsed()) {
-      y += 20;
-    } else {
-      y += panel.getHeight();
-    }
-  }
-}
-
 
 
 
