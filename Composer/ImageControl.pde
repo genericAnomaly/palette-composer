@@ -30,7 +30,9 @@ class ImageControl extends Canvas {
     content = createImage(w, h, RGB);
     content.loadPixels();
     int dim = w*h;
-    for (int i=0; i<dim; i++) content.pixels[i] = color(i%256, 256-i%256, abs(i%512-256) );
+    //for (int i=0; i<dim; i++) content.pixels[i] = color(i%256, 256-i%256, abs(i%512-256) );
+    //for (int i=0; i<dim; i++) content.pixels[i] = color(abs((i/4)%512-256), abs((i+128)%512-256), abs(i%512-256) );
+    for (int i=0; i<dim; i++) content.pixels[i] = color( 191 + 64*(i%2), 0.5 );
     content.updatePixels();
     renderContent();
     dropShadow = false;
@@ -42,11 +44,14 @@ class ImageControl extends Canvas {
     p.translate(x, y);
     //if (dropShadow) image(shadow, 0, 0);
     try {
-      if (rendered != null) {
+      if (rendered != null && rendered.canDraw()) {
         p.image(rendered, 0, 0);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      //TODO: This damn thing keeps firing off pervasively during normal use.
+      //It can be recreated by passing setImage a null value
+      //e.printStackTrace();
+      print("#"); //easier than a frickin' 30 line stack trace every frame
     }
     p.popMatrix();
   }
@@ -67,6 +72,7 @@ class ImageControl extends Canvas {
     if (content != null) renderContent();
   }
   public void setImage(PImage i) {
+    if (i == null) return;  //TODO: throw an exception maybe?
     content = i;
     renderContent();
   }

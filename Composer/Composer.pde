@@ -39,6 +39,7 @@ Button bSave;
 Button bLoadImage;
 Button bLoadJSON;
 
+ArrayList<Group> gChannelList;
 
 //Vars
 PImage baseSprite;
@@ -170,7 +171,7 @@ public void sortUIElements(int paneWidth, int paneHeight) {
   
   //Channel Manager Panel
   gChannels.setPosition(LAYOUT_SIZE_GUTTER, channelManTop);
-  gChannels.setSize(LAYOUT_SIZE_GUTTER*2 + 2*panelSide + floor(4*panelThird), 160); //force alignment with Mixer panel
+  gChannels.setSize(LAYOUT_SIZE_GUTTER*2 + 2*panelSide + floor(4*panelThird), panelSide); //force alignment with Mixer panel
   
 }
 
@@ -197,7 +198,7 @@ public void onLoadSpriteSelected(File f) {
     println("[ERROR] Exception occurred while attempting to load your image. Please make sure your file is valid and try again.");
     return;
   }
-  iBase.setImage(baseSprite);
+  if (baseSprite != null) iBase.setImage(baseSprite);
 }
 
 public void onLoadJSONSelected(File f) {
@@ -227,7 +228,7 @@ public void loadJSON(JSONObject json) {
     try {
       jarray = json.getJSONArray(channel);
     } catch (Exception e) {
-      println("An error occured while attempting to load your channels! Check your JSON and try again. Exception report printed to stderr.");
+      println("[ERROR] Exception occured while attempting to load your channels! Please make sure your file is valid and try again.");
       e.printStackTrace();
       return;
     }
@@ -239,6 +240,25 @@ public void loadJSON(JSONObject json) {
     println(c);
   }
   
+  //TODO: Panels for each channel
+}
+
+
+
+public void disposeChannelPanels () {
+  if (gChannelList != null) {
+    //Properly dispose of the UI elements within gChannelList
+  }
+  gChannelList = null;
+}
+
+public void buildChannelPanels () {
+  //TODO
+}
+
+
+
+
   /*
   clearChannelPanels();
   channelPanels = new ArrayList<GPanel>( channels.size() );
@@ -253,8 +273,7 @@ public void loadJSON(JSONObject json) {
   }
   arrangeChannelPanels();
   */
-  
-}
+ 
 
 
 
