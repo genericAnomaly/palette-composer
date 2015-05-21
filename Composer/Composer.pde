@@ -52,7 +52,8 @@ public void setup(){
   buildUIElements();
   
   //Set up frame junk if we have one
-    if (frame != null) {
+  if (frame != null) {
+    frame.setTitle("Palette Composer");
     frame.setResizable(true);
     frame.setMinimumSize(new Dimension(LAYOUT_MINIMUM_WIDTH, LAYOUT_MINIMUM_HEIGHT));
     frame.addComponentListener(new FrameListener());
@@ -128,7 +129,13 @@ public void buildUIElements () {
   gMixer.disableCollapse();
   gMixer.setMoveable(false);
   
-  //Channel Manager Panel
+  
+  //Channel Manager Panel  =====================================
+  gChannels = cp5.addGroup("Channel Manager");
+  gChannels.setBackgroundColor(LAYOUT_COLOR_PANELS);
+  gChannels.disableCollapse();
+  gChannels.setMoveable(false);
+  
   
   sortUIElements(width, height);
 }
@@ -138,26 +145,32 @@ public void buildUIElements () {
 
 public void sortUIElements(int paneWidth, int paneHeight) {
   //Calculate common size values
-  int panelSide = floor( (paneWidth - 4*LAYOUT_SIZE_GUTTER)/10 );
+  float panelThird = (paneWidth - 4*LAYOUT_SIZE_GUTTER)/10;
+  int panelSide = floor(3*panelThird);
   int panelTop = LAYOUT_SIZE_GUTTER + LAYOUT_SIZE_TOOLBAR + gBase.getBarHeight();
+  int channelManTop = panelTop + panelSide + LAYOUT_SIZE_GUTTER + gChannels.getBarHeight();
   
   //Toolbar
   gToolbar.setPosition(0, 0);
   gToolbar.setSize(paneWidth, LAYOUT_SIZE_TOOLBAR );
   
   //Base Sprite Panel
-  gBase.setSize(3*panelSide, 3*panelSide);
   gBase.setPosition(LAYOUT_SIZE_GUTTER, panelTop );
-  iBase.setSize(3*panelSide, 3*panelSide);
+  gBase.setSize(panelSide, panelSide);
+  iBase.setSize(panelSide, panelSide);
   
   //Preview Sprite Panel
-  gPreview.setSize(3*panelSide, 3*panelSide);
-  gPreview.setPosition(LAYOUT_SIZE_GUTTER*2 + 3*panelSide, panelTop);
-  iPreview.setSize(3*panelSide, 3*panelSide);
+  gPreview.setPosition(LAYOUT_SIZE_GUTTER*2 + panelSide, panelTop);
+  gPreview.setSize(panelSide, panelSide);
+  iPreview.setSize(panelSide, panelSide);
   
   //Mixer Panel
-  gMixer.setSize(4*panelSide, 3*panelSide);
-  gMixer.setPosition(LAYOUT_SIZE_GUTTER*3 + 6*panelSide, panelTop);
+  gMixer.setPosition(LAYOUT_SIZE_GUTTER*3 + 2*panelSide, panelTop);
+  gMixer.setSize( floor(4*panelThird), panelSide);
+  
+  //Channel Manager Panel
+  gChannels.setPosition(LAYOUT_SIZE_GUTTER, channelManTop);
+  gChannels.setSize(LAYOUT_SIZE_GUTTER*2 + 2*panelSide + floor(4*panelThird), 160); //force alignment with Mixer panel
   
 }
 
@@ -165,12 +178,26 @@ public void sortUIElements(int paneWidth, int paneHeight) {
 
 
 
+
+
+public void controlEvent(ControlEvent theEvent) {
+  //println(theEvent.getController());
+  if (theEvent.getController() == bLoadImage) selectInput("Select sprite to load", "onLoadSpriteSelected"); 
+  if (theEvent.getController() == bLoadJSON)selectInput("Select palette file to load", "onLoadJSONSelected");
+}
+
 public void onLoadSpriteSelected(File f) {
   //Abort if cancelled
   if (f == null) return;
   //Load the file
-  baseSprite = loadImage(f.getAbsolutePath());
-  //TODO
+  try {
+    baseSprite = loadImage(f.getAbsolutePath());
+  } catch (Exception e) {
+    //TODO: Error message in a modal dialog box
+    println("[ERROR] Exception occurred while attempting to load your image. Please make sure your file is valid and try again.");
+    return;
+  }
+  iBase.setImage(baseSprite);
 }
 
 public void onLoadJSONSelected(File f) {
@@ -182,8 +209,8 @@ public void onLoadJSONSelected(File f) {
     loadJSON(json);
   } catch (Exception e) {
     //TODO: Change this to pop up a dialog box
-    println("An error occured while attempting to load your channels! Check your JSON and try again. Exception report printed to stderr.");
-    e.printStackTrace();
+    println("[ERROR] Exception occured while attempting to load your channels! Please make sure your file is valid and try again.");
+    //e.printStackTrace();
     return;
   }
 }

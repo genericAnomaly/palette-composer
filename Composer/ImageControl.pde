@@ -76,8 +76,8 @@ class ImageControl extends Canvas {
     //Initialise the PGraphics object
     rendered = createGraphics(w, h);
     //Figure out what scale will fill the panel, respecting global gutters on ImageControl objects
-    float scaleX = (rendered.width-LAYOUT_IMAGE_GUTTER)/content.width;
-    float scaleY = (rendered.height-LAYOUT_IMAGE_GUTTER)/content.height;
+    float scaleX = (rendered.width-LAYOUT_IMAGE_GUTTER)/((float) content.width);
+    float scaleY = (rendered.height-LAYOUT_IMAGE_GUTTER)/((float) content.height);
     //For scales above 100%, use multiples of 100% only!
     if (scaleX>1) scaleX = floor(scaleX);
     if (scaleY>1) scaleY = floor(scaleY); 
