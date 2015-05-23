@@ -17,7 +17,7 @@ int LAYOUT_MINIMUM_WIDTH = 640;
 int LAYOUT_MINIMUM_HEIGHT = 480;
 
 int LAYOUT_IMAGE_GUTTER = 8;
-
+//UI COLORS
 int LAYOUT_COLOR_BG = 80;
 int LAYOUT_COLOR_PANELS = 96;
 int LAYOUT_COLOR_TOOLBAR = 127;
@@ -167,11 +167,11 @@ public void sortUIElements(int paneWidth, int paneHeight) {
   
   //Mixer Panel
   gMixer.setPosition(LAYOUT_SIZE_GUTTER*3 + 2*panelSide, panelTop);
-  gMixer.setSize( floor(4*panelThird), panelSide);
+  gMixer.setSize( paneWidth - (2*panelSide+4*LAYOUT_SIZE_GUTTER), panelSide);
   
   //Channel Manager Panel
   gChannels.setPosition(LAYOUT_SIZE_GUTTER, channelManTop);
-  gChannels.setSize(LAYOUT_SIZE_GUTTER*2 + 2*panelSide + floor(4*panelThird), panelSide); //force alignment with Mixer panel
+  gChannels.setSize(paneWidth - LAYOUT_SIZE_GUTTER*2, panelSide);
   
 }
 
