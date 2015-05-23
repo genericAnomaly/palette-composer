@@ -80,10 +80,10 @@ class ImageControl extends Canvas {
   //Function to prepare copy content to rendered at a suitable size and position for display
   private void renderContent() {
     //Initialise the PGraphics object
-    rendered = createGraphics(w, h);
+    PGraphics render = createGraphics(w, h);
     //Figure out what scale will fill the panel, respecting global gutters on ImageControl objects
-    float scaleX = (rendered.width-LAYOUT_IMAGE_GUTTER)/((float) content.width);
-    float scaleY = (rendered.height-LAYOUT_IMAGE_GUTTER)/((float) content.height);
+    float scaleX = (render.width-LAYOUT_IMAGE_GUTTER)/((float) content.width);
+    float scaleY = (render.height-LAYOUT_IMAGE_GUTTER)/((float) content.height);
     //For scales above 100%, use multiples of 100% only!
     if (scaleX>1) scaleX = floor(scaleX);
     if (scaleY>1) scaleY = floor(scaleY); 
@@ -91,13 +91,14 @@ class ImageControl extends Canvas {
     float scaleBoth = scaleX;
     if (scaleY < scaleX) scaleBoth = scaleY;
     //Draw it to the PGraphics object
-    rendered.beginDraw();
+    render.beginDraw();
     //noSmooth is critical, otherwise scaling up causes interpolation, the WORST THING IN THE WORLD
-    if (scaleBoth>1) rendered.noSmooth();
+    if (scaleBoth>1) render.noSmooth();
     //Draw it to the center (that's all that ugly as doubleheck math is for)
-    rendered.image(content, (rendered.width-content.width*scaleBoth)/2, (rendered.height-content.height*scaleBoth)/2, content.width*scaleBoth, content.height*scaleBoth);
+    render.image(content, (render.width-content.width*scaleBoth)/2, (render.height-content.height*scaleBoth)/2, content.width*scaleBoth, content.height*scaleBoth);
     //Finalise the graphic
-    rendered.endDraw();
+    render.endDraw();
+    rendered = render;
   }
 
 
