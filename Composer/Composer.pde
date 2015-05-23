@@ -16,12 +16,13 @@ int LAYOUT_SIZE_TOOLBAR = 20;
 int LAYOUT_MINIMUM_WIDTH = 640;
 int LAYOUT_MINIMUM_HEIGHT = 480;
 
+int LAYOUT_CHANNEL_MINIMUM_HEIGHT = 32;
 int LAYOUT_IMAGE_GUTTER = 8;
 //UI COLORS
 int LAYOUT_COLOR_BG = 80;
 int LAYOUT_COLOR_PANELS = 96;
 int LAYOUT_COLOR_TOOLBAR = 127;
-
+int LAYOUT_COLOR_CHANNELS = 108;
 
 //ControlP5 UI Elements
 ControlP5 cp5;
@@ -48,6 +49,9 @@ ArrayList<Channel> channels;
 public void setup(){
   //Size the frame
   size(640, 480);
+  
+  //Initialise ArrayLists empty to avoid having to check for null all the time
+  gChannelList = new ArrayList<Group>();
   
   //Build the UI
   buildUIElements();
@@ -109,7 +113,6 @@ public void buildUIElements () {
   //Base Sprite Image Control
   iBase = new ImageControl();
 //  iBase.enableShadow(true);
-  //iBase.setImage(loadImage("kirhos.png"));
   gBase.addCanvas(iBase);
 
   
@@ -136,7 +139,7 @@ public void buildUIElements () {
   gChannels.setBackgroundColor(LAYOUT_COLOR_PANELS);
   gChannels.disableCollapse();
   gChannels.setMoveable(false);
-  
+
   
   sortUIElements(width, height);
 }
@@ -173,9 +176,29 @@ public void sortUIElements(int paneWidth, int paneHeight) {
   gChannels.setPosition(LAYOUT_SIZE_GUTTER, channelManTop);
   gChannels.setSize(paneWidth - LAYOUT_SIZE_GUTTER*2, panelSide);
   
+  //Individual Channel Panels
+  sortChannelPanels(paneWidth);
+  
 }
 
+public void sortChannelPanels () {
+  sortChannelPanels(width);
+}
 
+public void sortChannelPanels (int paneWidth) {
+  if (gChannelList != null) {
+    int i = 0;
+    int y = LAYOUT_SIZE_GUTTER + gChannels.getBarHeight();
+    for (Group channelPanel : gChannelList) {
+      channelPanel.setPosition(LAYOUT_SIZE_GUTTER, y);
+      channelPanel.setSize(paneWidth - LAYOUT_SIZE_GUTTER*4, LAYOUT_CHANNEL_MINIMUM_HEIGHT);
+      y += channelPanel.getBarHeight();
+      y += LAYOUT_SIZE_GUTTER;
+      if (channelPanel.isOpen()) y += LAYOUT_CHANNEL_MINIMUM_HEIGHT; //channelPanel.getHeight();
+      //println(channelPanel.getName() + " isOpen() = " + channelPanel.isOpen() + ", getHeight() = " + channelPanel.getHeight() );
+    }
+  }
+}
 
 
 
@@ -183,8 +206,13 @@ public void sortUIElements(int paneWidth, int paneHeight) {
 
 public void controlEvent(ControlEvent theEvent) {
   //println(theEvent.getController());
-  if (theEvent.getController() == bLoadImage) selectInput("Select sprite to load", "onLoadSpriteSelected"); 
-  if (theEvent.getController() == bLoadJSON)selectInput("Select palette file to load", "onLoadJSONSelected");
+  if (theEvent.isGroup()) {
+    if ( gChannelList.contains(theEvent.getGroup()) ) sortChannelPanels();
+  }
+  if (theEvent.isController()){
+    if (theEvent.getController() == bLoadImage) selectInput("Select sprite to load", "onLoadSpriteSelected"); 
+    if (theEvent.getController() == bLoadJSON) selectInput("Select palette file to load", "onLoadJSONSelected");
+  }
 }
 
 public void onLoadSpriteSelected(File f) {
@@ -198,7 +226,10 @@ public void onLoadSpriteSelected(File f) {
     println("[ERROR] Exception occurred while attempting to load your image. Please make sure your file is valid and try again.");
     return;
   }
-  if (baseSprite != null) iBase.setImage(baseSprite);
+  if (baseSprite != null) {
+    iBase.setImage(baseSprite);
+    iPreview.setImage(baseSprite);
+  }
 }
 
 public void onLoadJSONSelected(File f) {
@@ -241,39 +272,36 @@ public void loadJSON(JSONObject json) {
   }
   
   //TODO: Panels for each channel
+  buildChannelPanels();
 }
 
 
 
 public void disposeChannelPanels () {
   if (gChannelList != null) {
-    //Properly dispose of the UI elements within gChannelList
+    //TODO: Make sure this is properly disposing of the UI elements within gChannelList
+    for (Group channelPanel : gChannelList) channelPanel.remove();
   }
-  gChannelList = null;
+  gChannelList = new ArrayList<Group>();
 }
 
 public void buildChannelPanels () {
   //TODO
+  disposeChannelPanels();
+  gChannelList = new ArrayList<Group>(channels.size());
+  for (Channel c : channels) {
+    println("Loading channel " + c.name);
+    Group channelPanel = cp5.addGroup(c.name);
+    //channelPanel.disableCollapse();
+    channelPanel.setMoveable(false);
+    channelPanel.setBackgroundColor(LAYOUT_COLOR_CHANNELS);
+    channelPanel.activateEvent(true);
+    channelPanel.setGroup(gChannels);
+    gChannelList.add(channelPanel);
+  }
+  sortUIElements(width, height);
 }
 
-
-
-
-  /*
-  clearChannelPanels();
-  channelPanels = new ArrayList<GPanel>( channels.size() );
-  for (int i=0; i<channels.size(); i++) {
-    GPanel panel = new GPanel(this, 0, 20+i*48, 640, 52, channels.get(i).name);
-    panel.setDraggable(false);
-    panel.setLocalColorScheme(GCScheme.ORANGE_SCHEME);
-    panel.setOpaque(true);
-    panel.addEventHandler(this, "onChannelPanelEvent");
-    pChannels.addControl(panel);
-    channelPanels.add(panel);
-  }
-  arrangeChannelPanels();
-  */
- 
 
 
 
