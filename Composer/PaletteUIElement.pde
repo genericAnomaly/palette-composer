@@ -18,8 +18,11 @@ public class PaletteUIElement {
   private void buildElement (){
     int rows = myPalette.getSize();
     if (rows > LAYOUT_PALETTE_MAX_ROWS) rows = LAYOUT_PALETTE_MAX_ROWS;
-    int cols = ceil(myPalette.getSize()/rows);
+    int cols = ceil( (float) myPalette.getSize()/rows);
     
+    int myWidth = cols*LAYOUT_PALETTE_SQUARE_SIZE + 2*LAYOUT_IMAGE_GUTTER;
+    int myHeight = rows*LAYOUT_PALETTE_SQUARE_SIZE + 2*LAYOUT_IMAGE_GUTTER;
+    if (myWidth < myHeight) myWidth = myHeight;
     
     myGroup = cp5.addGroup(myChannel.name + "_" + "base");
     myGroup.setPosition(LAYOUT_SIZE_GUTTER, LAYOUT_SIZE_GUTTER);
@@ -29,22 +32,17 @@ public class PaletteUIElement {
     
     
     Toggle t = cp5.addToggle(myChannel.name + "_" + "base" + "toggle");
-    t.setSize(64, 64);
+    t.setSize(myWidth, myHeight);
     t.setPosition(0, 0);
     t.setLabel("");
     t.setGroup(myGroup);
     
     ImageControl i = new ImageControl();
     myGroup.addCanvas(i);
-    i.setSize(32, 32);
     i.post();
-    i.setSize( cols*LAYOUT_PALETTE_SQUARE_SIZE+2*LAYOUT_IMAGE_GUTTER, rows*LAYOUT_PALETTE_SQUARE_SIZE+2*LAYOUT_IMAGE_GUTTER);
-    //i.setImage(myPalette.toPImage(rows, cols));
- //   PImage pi = myPalette.toPImage(rows, cols);
-    //image(pi, 320, 320);
-    //i.setImage(pi);
- //   testPI = pi;
-    //noLoop();
+    i.setSize( myWidth, myHeight);
+    i.setImage(myPalette.toPImage(rows, cols));
+
     
   }
   

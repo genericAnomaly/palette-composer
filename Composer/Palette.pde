@@ -68,9 +68,18 @@ public class Palette {
   
   public PImage toPImage (int rows, int columns) {
     PImage p = createImage(columns, rows, RGB);
+    //fill columns first
+    int x = 0;
+    int y = 0;
     p.loadPixels();
     for (int i=0; (i<colors.length && i<p.pixels.length); i++) {
-      p.pixels[i] = awtColorToInt(colors[i]);
+      //p.pixels[i] = awtColorToInt(colors[i]);
+      p.pixels[x+columns*y] = awtColorToInt(colors[i]);
+      y++;
+      if (y >= rows) {
+        x++;
+        y = 0;
+      }
     }
     p.updatePixels();
     return p;
