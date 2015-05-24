@@ -33,10 +33,10 @@ public class ChannelManagerUIElement {
       int y = LAYOUT_SIZE_GUTTER + myGroup.getBarHeight();
       for (ChannelUIElement child : children) {
         child.setPosition(LAYOUT_SIZE_GUTTER, y);
-        child.setSize(myGroup.getWidth() - LAYOUT_SIZE_GUTTER*2, 77); //TODO: method for channel to set its own height based on children
+        child.setSize(myGroup.getWidth() - LAYOUT_SIZE_GUTTER*2, 62); //TODO: method for channel to set its own height based on children
         y += child.myGroup.getBarHeight();
         y += LAYOUT_SIZE_GUTTER;
-        if (child.myGroup.isOpen()) y += 77; //child.myGroup.getHeight(); <-- same TODO, getHeight doesn't work for some reason
+        if (child.myGroup.isOpen()) y += 62; //child.myGroup.getHeight(); <-- same TODO, getHeight doesn't work for some reason
         //println(channelPanel.getName() + " isOpen() = " + channelPanel.isOpen() + ", getHeight() = " + channelPanel.getHeight() );
       }
     }

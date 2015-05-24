@@ -28,6 +28,7 @@ public class PaletteUIElement {
     
     myGroup = cp5.addGroup(myChannel.name + "_" + name);
     myGroup.setPosition(LAYOUT_SIZE_GUTTER, LAYOUT_SIZE_GUTTER);
+    myGroup.setSize(myWidth, myHeight);
     myGroup.setMoveable(false);
     myGroup.disableCollapse();
     myGroup.hideBar();
@@ -52,6 +53,13 @@ public class PaletteUIElement {
     myGroup.setGroup(theGroup);
   }
   
+  public int getWidth() {
+    return myGroup.getWidth();
+  }
+  
+  public void setPosition(int x, int y) {
+    myGroup.setPosition(x, y);
+  }
   
   
 }

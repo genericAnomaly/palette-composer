@@ -188,9 +188,7 @@ public void sortUIElements(int paneWidth, int paneHeight) {
   gMixer.setPosition(LAYOUT_SIZE_GUTTER*3 + 2*panelSide, panelTop);
   gMixer.setSize( paneWidth - (2*panelSide+4*LAYOUT_SIZE_GUTTER), panelSide);
   
-  //Channel Manager Panel
-//  gChannels.setPosition(LAYOUT_SIZE_GUTTER, channelManTop);
-//  gChannels.setSize(paneWidth - LAYOUT_SIZE_GUTTER*2, panelSide);
+  //Channel Manager UI Element
   uiChannelManager.setPosition(LAYOUT_SIZE_GUTTER, channelManTop);
   uiChannelManager.setSize(paneWidth - LAYOUT_SIZE_GUTTER*2, panelSide);
   
@@ -238,9 +236,11 @@ public void onLoadJSONSelected(File f) {
   //Abort if cancelled
   if (f == null) return;
   //Load the file
+  JSONObject json = loadJSONObject( f.getAbsolutePath() ); //TODO: put this back in the trycatch and add loop() to the catcher.
+  loadJSON(json);
   try {
-    JSONObject json = loadJSONObject( f.getAbsolutePath() );
-    loadJSON(json);
+    //JSONObject json = loadJSONObject( f.getAbsolutePath() );
+    //loadJSON(json);
   } catch (Exception e) {
     //TODO: Change this to pop up a dialog box
     println("[ERROR] Exception occured while attempting to load your channels! Please make sure your file is valid and try again.");
@@ -258,10 +258,11 @@ public void loadJSON(JSONObject json) {
   
   for (String channel : channelNames) {
     JSONArray jarray;
+    jarray = json.getJSONArray(channel); //TODO: put this back in the trycatch and add loop() to the catcher.
     try {
-      jarray = json.getJSONArray(channel);
+      //jarray = json.getJSONArray(channel);
     } catch (Exception e) {
-      println("[ERROR] Exception occured while attempting to load your channels! Please make sure your file is valid and try again.");
+      println("[ERROR] Exception occured while attempting to parse your channels! Please make sure your file is valid and try again.");
       e.printStackTrace();
       return;
     }
