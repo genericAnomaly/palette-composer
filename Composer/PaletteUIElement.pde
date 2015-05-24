@@ -3,14 +3,16 @@ public class PaletteUIElement {
   Palette myPalette;
   Channel myChannel;
   
+  ChannelUIElement parent;
   Group myGroup;
   Toggle myToggle;
   ImageControl myImage;
   
   String name;
   
-  public PaletteUIElement(Channel c, Palette p, String n) {
-    myChannel = c;
+  public PaletteUIElement(ChannelUIElement c, Palette p, String n) {
+    parent = c;
+    myChannel = c.myChannel;
     myPalette = p;
     name = n;
     buildElement();
@@ -59,6 +61,11 @@ public class PaletteUIElement {
   
   public void setPosition(int x, int y) {
     myGroup.setPosition(x, y);
+  }
+  
+  
+  public PImage paletteSwap(PImage source) {
+    return myPalette.paletteSwap(source, parent.myChannel.base);
   }
   
   

@@ -212,6 +212,17 @@ public void controlEvent(ControlEvent theEvent) {
     if (theEvent.getController() == bLoadImage) selectInput("Select sprite to load", "onLoadSpriteSelected"); 
     if (theEvent.getController() == bLoadJSON) selectInput("Select palette file to load", "onLoadJSONSelected");
     if (theEvent.getController() == bSave) testLoad = true;
+    
+    if (theEvent.getController() instanceof Toggle) {
+      println("Toggle fired");
+      Toggle t = (Toggle) theEvent.getController();
+      PaletteUIElement source = uiChannelManager.getPaletteUIElement(t);
+      println("Source: " + source.myPalette);
+      source.parent.highlightElement(source);
+      PImage swapped = source.paletteSwap(baseSprite);
+      iPreview.setImage(swapped);
+    }
+    
   }
 }
 
@@ -236,14 +247,13 @@ public void onLoadJSONSelected(File f) {
   //Abort if cancelled
   if (f == null) return;
   //Load the file
-  JSONObject json = loadJSONObject( f.getAbsolutePath() ); //TODO: put this back in the trycatch and add loop() to the catcher.
-  loadJSON(json);
   try {
-    //JSONObject json = loadJSONObject( f.getAbsolutePath() );
-    //loadJSON(json);
+    JSONObject json = loadJSONObject( f.getAbsolutePath() );
+    loadJSON(json);
   } catch (Exception e) {
     //TODO: Change this to pop up a dialog box
     println("[ERROR] Exception occured while attempting to load your channels! Please make sure your file is valid and try again.");
+    loop();
     //e.printStackTrace();
     return;
   }

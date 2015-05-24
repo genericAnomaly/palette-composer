@@ -1,7 +1,7 @@
 public class Palette {
   
   Color[] colors;
-  
+  int[] colorInts;
   
   public Palette(int size) {
     colors = new Color[size];
@@ -12,13 +12,35 @@ public class Palette {
     loadStringArray(strings);
   }
   
+  private void loadIntArray() {
+    colorInts = new int[colors.length];
+    for (int i=0; i < colors.length; i++) {
+      colorInts[i] = awtColorToInt(colors[i]);
+    }
+  }
+  
   public int getSize() {
     return colors.length;
   } 
   
-  public void /*PGraphics probably*/ paletteSwap(PGraphics target, Palette swap) {
-    //TODO
-    //NB: this should not return an altered version of target, but a new PGraphics with ONLY the altered pixels present, to avoid potential collisions 
+  
+  public PImage paletteSwap(PImage source, Palette base) {
+    PImage target = createImage(source.width, source.height, RGB);
+    target.loadPixels();
+    source.loadPixels();
+    
+    //TODO: Consider just doing away with the current colors array and only storing ints since we can't really use awt Colors anyway
+    loadIntArray();
+    
+    for (int i=0; i<source.pixels.length; i++) {
+      for (int j=0; j<colorInts.length; j++) {
+        if (source.pixels[i] == colorInts[j]) target.pixels[i] = source.pixels[i];
+      }
+    }
+    
+    target.updatePixels();
+    return target;
+    //NB: This returns a PIMmage of ONLY the altered pixels for layering, to avoid potential collisions 
   }
   
   
