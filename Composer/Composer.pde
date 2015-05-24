@@ -44,6 +44,8 @@ Button bSave;
 Button bLoadImage;
 Button bLoadJSON;
 
+ChannelManagerUIElement uiChannelManager;
+
 ArrayList<Group> gChannelList;
 
 
@@ -149,11 +151,11 @@ public void buildUIElements () {
   
   
   //Channel Manager Panel  =====================================
-  gChannels = cp5.addGroup("Channel Manager");
-  gChannels.setBackgroundColor(LAYOUT_COLOR_PANELS);
-  gChannels.disableCollapse();
-  gChannels.setMoveable(false);
-
+//  gChannels = cp5.addGroup("Channel Manager");
+//  gChannels.setBackgroundColor(LAYOUT_COLOR_PANELS);
+//  gChannels.disableCollapse();
+//  gChannels.setMoveable(false);
+  uiChannelManager = new ChannelManagerUIElement();
   
   sortUIElements(width, height);
 }
@@ -166,7 +168,7 @@ public void sortUIElements(int paneWidth, int paneHeight) {
   float panelThird = (paneWidth - 4*LAYOUT_SIZE_GUTTER)/10;
   int panelSide = floor(3*panelThird);
   int panelTop = LAYOUT_SIZE_GUTTER + LAYOUT_SIZE_TOOLBAR + gBase.getBarHeight();
-  int channelManTop = panelTop + panelSide + LAYOUT_SIZE_GUTTER + gChannels.getBarHeight();
+  int channelManTop = panelTop + panelSide + LAYOUT_SIZE_GUTTER + gBase.getBarHeight();  //don't bother delving, just assume everyone's got the same bar height
   
   //Toolbar
   gToolbar.setPosition(0, 0);
@@ -187,32 +189,13 @@ public void sortUIElements(int paneWidth, int paneHeight) {
   gMixer.setSize( paneWidth - (2*panelSide+4*LAYOUT_SIZE_GUTTER), panelSide);
   
   //Channel Manager Panel
-  gChannels.setPosition(LAYOUT_SIZE_GUTTER, channelManTop);
-  gChannels.setSize(paneWidth - LAYOUT_SIZE_GUTTER*2, panelSide);
-  
-  //Individual Channel Panels
-  sortChannelPanels(paneWidth);
+//  gChannels.setPosition(LAYOUT_SIZE_GUTTER, channelManTop);
+//  gChannels.setSize(paneWidth - LAYOUT_SIZE_GUTTER*2, panelSide);
+  uiChannelManager.setPosition(LAYOUT_SIZE_GUTTER, channelManTop);
+  uiChannelManager.setSize(paneWidth - LAYOUT_SIZE_GUTTER*2, panelSide);
   
 }
 
-public void sortChannelPanels () {
-  sortChannelPanels(width);
-}
-
-public void sortChannelPanels (int paneWidth) {
-  if (gChannelList != null) {
-    int i = 0;
-    int y = LAYOUT_SIZE_GUTTER + gChannels.getBarHeight();
-    for (Group channelPanel : gChannelList) {
-      channelPanel.setPosition(LAYOUT_SIZE_GUTTER, y);
-      channelPanel.setSize(paneWidth - LAYOUT_SIZE_GUTTER*4, LAYOUT_CHANNEL_MINIMUM_HEIGHT);
-      y += channelPanel.getBarHeight();
-      y += LAYOUT_SIZE_GUTTER;
-      if (channelPanel.isOpen()) y += LAYOUT_CHANNEL_MINIMUM_HEIGHT; //channelPanel.getHeight();
-      //println(channelPanel.getName() + " isOpen() = " + channelPanel.isOpen() + ", getHeight() = " + channelPanel.getHeight() );
-    }
-  }
-}
 
 
 
@@ -221,7 +204,11 @@ public void sortChannelPanels (int paneWidth) {
 public void controlEvent(ControlEvent theEvent) {
   //println(theEvent.getController());
   if (theEvent.isGroup()) {
-    if ( gChannelList.contains(theEvent.getGroup()) ) sortChannelPanels();
+    if ( uiChannelManager.children != null ) {
+      for (ChannelUIElement cuie : uiChannelManager.children) {
+        if (cuie.myGroup == theEvent.getGroup()) uiChannelManager.sortElements();
+      }
+    }
   }
   if (theEvent.isController()){
     if (theEvent.getController() == bLoadImage) selectInput("Select sprite to load", "onLoadSpriteSelected"); 
@@ -287,7 +274,10 @@ public void loadJSON(JSONObject json) {
   }
   
   //TODO: Panels for each channel
-  buildChannelPanels();
+  //buildChannelPanels();
+  noLoop();
+  uiChannelManager.loadChannels(channels);
+  loop();
 }
 
 

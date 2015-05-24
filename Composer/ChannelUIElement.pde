@@ -19,7 +19,7 @@ public class ChannelUIElement {
     myGroup.setMoveable(false);
     myGroup.setBackgroundColor(LAYOUT_COLOR_CHANNELS);
     myGroup.activateEvent(true);
-    myGroup.setGroup(gChannels);
+    //myGroup.setGroup(gChannels);
     //gChannelList.add(channelPanel);
     
     //TODO: Build optional scrollbar
@@ -46,6 +46,16 @@ public class ChannelUIElement {
   
   public void setGroup (Group theGroup) {
     myGroup.setGroup(theGroup);
+  }
+  
+  
+  public void setSize(int w, int h) {
+    myGroup.setSize(w, h);
+    //sortElements();
+  }
+  
+  public void setPosition(int x, int y) {
+    myGroup.setPosition(x, y);
   }
   
   
