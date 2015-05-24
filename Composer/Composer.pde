@@ -307,6 +307,14 @@ public void buildChannelPanels () {
   //TODO
   disposeChannelPanels();
   gChannelList = new ArrayList<Group>(channels.size());
+  
+  
+  for (Channel c : channels) {
+    ChannelUIElement cuie = new ChannelUIElement(c);
+    cuie.setGroup(gChannels);
+  }
+  
+  /*
   for (Channel c : channels) {
     println("Loading channel " + c.name);
     Group channelPanel = cp5.addGroup(c.name);
@@ -318,17 +326,12 @@ public void buildChannelPanels () {
     gChannelList.add(channelPanel);
     
     //Now add Palettes
-    PaletteUIElement puie = new PaletteUIElement(c, c.base);
+    PaletteUIElement puie = new PaletteUIElement(c, c.base, "base");
     puie.setGroup(channelPanel);
-    /*
-    Toggle t = cp5.addToggle(c.name + "_" + "base");
-    t.setSize(64, 64);
-    t.setPosition(LAYOUT_SIZE_GUTTER, LAYOUT_SIZE_GUTTER);
-    t.setLabel("");
-    t.setGroup(channelPanel);
-    //channelPanel
-    */
+
   }
+  */
+  
   sortUIElements(width, height);
   
   try{ 

@@ -4,13 +4,15 @@ public class PaletteUIElement {
   Channel myChannel;
   
   Group myGroup;
+  Toggle myToggle;
+  ImageControl myImage;
   
+  String name;
   
-  
-  
-  public PaletteUIElement(Channel c, Palette p) {
+  public PaletteUIElement(Channel c, Palette p, String n) {
     myChannel = c;
     myPalette = p;
+    name = n;
     buildElement();
   }
   
@@ -24,24 +26,24 @@ public class PaletteUIElement {
     int myHeight = rows*LAYOUT_PALETTE_SQUARE_SIZE + 2*LAYOUT_IMAGE_GUTTER;
     if (myWidth < myHeight) myWidth = myHeight;
     
-    myGroup = cp5.addGroup(myChannel.name + "_" + "base");
+    myGroup = cp5.addGroup(myChannel.name + "_" + name);
     myGroup.setPosition(LAYOUT_SIZE_GUTTER, LAYOUT_SIZE_GUTTER);
     myGroup.setMoveable(false);
     myGroup.disableCollapse();
     myGroup.hideBar();
     
     
-    Toggle t = cp5.addToggle(myChannel.name + "_" + "base" + "toggle");
-    t.setSize(myWidth, myHeight);
-    t.setPosition(0, 0);
-    t.setLabel("");
-    t.setGroup(myGroup);
+    myToggle = cp5.addToggle(myChannel.name + "_" + name + "_toggle");
+    myToggle.setSize(myWidth, myHeight);
+    myToggle.setPosition(0, 0);
+    myToggle.setLabel("");
+    myToggle.setGroup(myGroup);
     
-    ImageControl i = new ImageControl();
-    myGroup.addCanvas(i);
-    i.post();
-    i.setSize( myWidth, myHeight);
-    i.setImage(myPalette.toPImage(rows, cols));
+    myImage = new ImageControl();
+    myGroup.addCanvas(myImage);
+    myImage.post();
+    myImage.setSize( myWidth, myHeight);
+    myImage.setImage(myPalette.toPImage(rows, cols));
 
     
   }
