@@ -22,3 +22,5 @@ public class ChannelManagerUIElement {
   public void sortElements() {
     //TODO
   }
+  
+}
