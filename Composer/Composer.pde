@@ -18,6 +18,10 @@ int LAYOUT_MINIMUM_HEIGHT = 480;
 
 int LAYOUT_CHANNEL_MINIMUM_HEIGHT = 32;
 int LAYOUT_IMAGE_GUTTER = 8;
+
+int LAYOUT_PALETTE_MAX_ROWS = 4;
+int LAYOUT_PALETTE_SQUARE_SIZE = 8;
+
 //UI COLORS
 int LAYOUT_COLOR_BG = 80;
 int LAYOUT_COLOR_PANELS = 96;
@@ -42,9 +46,12 @@ Button bLoadJSON;
 
 ArrayList<Group> gChannelList;
 
+
 //Vars
 PImage baseSprite;
 ArrayList<Channel> channels;
+PImage testPI;
+Boolean testLoad = false;
 
 public void setup(){
   //Size the frame
@@ -73,6 +80,13 @@ public void setup(){
 void draw() {
   background(LAYOUT_COLOR_BG);
   
+  
+//  if (testPI != null) {
+//    PImage pi = testPI;
+//    image(pi, 320, 460, 40, 40);
+//  }
+  
+  if (testLoad) testLoadJSON();
 }
 
 
@@ -212,6 +226,7 @@ public void controlEvent(ControlEvent theEvent) {
   if (theEvent.isController()){
     if (theEvent.getController() == bLoadImage) selectInput("Select sprite to load", "onLoadSpriteSelected"); 
     if (theEvent.getController() == bLoadJSON) selectInput("Select palette file to load", "onLoadJSONSelected");
+    if (theEvent.getController() == bSave) testLoad = true;
   }
 }
 
@@ -268,7 +283,7 @@ public void loadJSON(JSONObject json) {
   
   //TODO: this loop's debug, pull it any time
   for (Channel c : channels) {
-    println(c);
+    //println(c);
   }
   
   //TODO: Panels for each channel
@@ -286,6 +301,9 @@ public void disposeChannelPanels () {
 }
 
 public void buildChannelPanels () {
+  //Turn off the draw loop during modifications to the UI to try to squelch that ConcurrentModificationException
+  noLoop();
+  
   //TODO
   disposeChannelPanels();
   gChannelList = new ArrayList<Group>(channels.size());
@@ -298,17 +316,48 @@ public void buildChannelPanels () {
     channelPanel.activateEvent(true);
     channelPanel.setGroup(gChannels);
     gChannelList.add(channelPanel);
+    
+    //Now add Palettes
+    PaletteUIElement puie = new PaletteUIElement(c, c.base);
+    puie.setGroup(channelPanel);
+    /*
+    Toggle t = cp5.addToggle(c.name + "_" + "base");
+    t.setSize(64, 64);
+    t.setPosition(LAYOUT_SIZE_GUTTER, LAYOUT_SIZE_GUTTER);
+    t.setLabel("");
+    t.setGroup(channelPanel);
+    //channelPanel
+    */
   }
   sortUIElements(width, height);
+  
+  try{ 
+    Thread.sleep(200);
+  } catch (Exception e) {
+    
+  }
+  
+  loop();
 }
 
 
-
+void testLoadJSON() {
+  JSONObject json = loadJSONObject( "../../testfiles/kirhos.json" );
+  //for (int i=0; i<50; i++) {
+    //println("Test " + i);
+    loadJSON(json);
+  //  redraw();
+  //}
+  
+}
 
 void fill(Color c) {
   fill( c.getRed(), c.getBlue(), c.getGreen() );
 }
 
+int awtColorToInt(Color c) {
+  return color (c.getRed(), c.getBlue(), c.getGreen());
+}
 
 
 

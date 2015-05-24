@@ -12,6 +12,10 @@ public class Palette {
     loadStringArray(strings);
   }
   
+  public int getSize() {
+    return colors.length;
+  } 
+  
   public void /*PGraphics probably*/ paletteSwap(PGraphics target, Palette swap) {
     //TODO
     //NB: this should not return an altered version of target, but a new PGraphics with ONLY the altered pixels present, to avoid potential collisions 
@@ -56,6 +60,20 @@ public class Palette {
     s += i + "Size: " + colors.length + "\n";
     for (Color c : colors) s += i + " - " + c + "\n";
     return s;
+  }
+  
+  public PImage toPImage () {
+    return toPImage(1, colors.length);
+  }
+  
+  public PImage toPImage (int rows, int columns) {
+    PImage p = createImage(columns, rows, RGB);
+    p.loadPixels();
+    for (int i=0; (i<colors.length && i<p.pixels.length); i++) {
+      p.pixels[i] = awtColorToInt(colors[i]);
+    }
+    p.updatePixels();
+    return p;
   }
   
 }
