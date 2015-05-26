@@ -30,11 +30,12 @@ public class Palette {
     source.loadPixels();
     
     //TODO: Consider just doing away with the current colors array and only storing ints since we can't really use awt Colors anyway
+    base.loadIntArray();
     loadIntArray();
     
     for (int i=0; i<source.pixels.length; i++) {
       for (int j=0; j<colorInts.length; j++) {
-        if (source.pixels[i] == colorInts[j]) target.pixels[i] = source.pixels[i];
+        if (source.pixels[i] == base.colorInts[j]) target.pixels[i] = colorInts[j];
       }
     }
     
