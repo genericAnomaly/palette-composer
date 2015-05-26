@@ -79,9 +79,11 @@ public class Palette {
   
   public String toString(String i) {
     i += "  ";
+    loadIntArray();
     String s = i+ "[Palette]\n";
     s += i + "Size: " + colors.length + "\n";
-    for (Color c : colors) s += i + " - " + c + "\n";
+    for (Color c : colors) s += i + " - " + c + "(" + Integer.toHexString(awtColorToInt(c)) + ")\n";
+    
     return s;
   }
   

@@ -364,11 +364,11 @@ void testLoadJSON() {
 }
 
 void fill(Color c) {
-  fill( c.getRed(), c.getBlue(), c.getGreen() );
+  fill( c.getRed(), c.getGreen(), c.getBlue() );
 }
 
 int awtColorToInt(Color c) {
-  return color (c.getRed(), c.getBlue(), c.getGreen());
+  return color (c.getRed(), c.getGreen(), c.getBlue());
 }
 
 
