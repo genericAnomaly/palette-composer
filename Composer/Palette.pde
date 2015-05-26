@@ -25,7 +25,7 @@ public class Palette {
   
   
   public PImage paletteSwap(PImage source, Palette base) {
-    PImage target = createImage(source.width, source.height, RGB);
+    PImage target = createImage(source.width, source.height, ARGB);
     target.loadPixels();
     source.loadPixels();
     

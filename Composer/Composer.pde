@@ -219,8 +219,16 @@ public void controlEvent(ControlEvent theEvent) {
       PaletteUIElement source = uiChannelManager.getPaletteUIElement(t);
       println("Source: " + source.myPalette);
       source.parent.highlightElement(source);
-      PImage swapped = source.paletteSwap(baseSprite);
+      PImage change = source.paletteSwap(baseSprite);
+      
+      //this is all mega sloppy and will be tidied up shortly.
+      PGraphics swapped = createGraphics(baseSprite.width, baseSprite.height);
+      swapped.beginDraw();
+      swapped.image(baseSprite, 0, 0);
+      swapped.image(change, 0, 0);
+      swapped.endDraw();
       iPreview.setImage(swapped);
+      
     }
     
   }
