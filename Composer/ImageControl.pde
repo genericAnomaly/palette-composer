@@ -79,6 +79,17 @@ class ImageControl extends Canvas {
     content = i;
     renderContent();
   }
+  
+  public void addLayer(PImage layer) {
+    //destructively layer a new image onto the current image.
+    PGraphics composite = createGraphics(content.width, content.height);
+    composite.beginDraw();
+    composite.image(content, 0, 0);
+    composite.image(layer, 0, 0);
+    composite.endDraw();
+    setImage(composite);
+    
+  }
 
   //Function to prepare copy content to rendered at a suitable size and position for display
   private void renderContent() {
