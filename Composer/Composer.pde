@@ -27,6 +27,13 @@ final int LAYOUT_COLOR_PANELS = 96;
 final int LAYOUT_COLOR_TOOLBAR = 127;
 final int LAYOUT_COLOR_CHANNELS = 108;
 //TODO: buttons and palettes
+final int LAYOUT_COLOR_BUTTON_NEUTRAL;
+final int LAYOUT_COLOR_BUTTON_HOVER;
+final int LAYOUT_COLOR_BUTTON_CLICK;
+final int LAYOUT_COLOR_LABEL_CAPTION;
+final int LAYOUT_COLOR_LABEL_VALUE;
+  //bCol = new CColor( #ff0000, #00ff00, #0000ff, #FFFF00, #00FFFF);
+  //Hover, Default, Onclick, LabelOver, LabelOffset
 
 //ControlP5 UI Elements
 ControlP5 cp5;
