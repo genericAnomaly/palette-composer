@@ -5,7 +5,8 @@ public class PaletteUIElement {
   
   ChannelUIElement parent;
   Group myGroup;
-  Toggle myToggle;
+  //Toggle myToggle;
+  Button myButton;
   ImageControl myImage;
   
   String name;
@@ -36,11 +37,11 @@ public class PaletteUIElement {
     myGroup.hideBar();
     
     
-    myToggle = cp5.addToggle(myChannel.name + "_" + name + "_toggle");
-    myToggle.setSize(myWidth, myHeight);
-    myToggle.setPosition(0, 0);
-    myToggle.setLabel("");
-    myToggle.setGroup(myGroup);
+    myButton = cp5.addButton(myChannel.name + "_" + name + "_button");
+    myButton.setSize(myWidth, myHeight);
+    myButton.setPosition(0, 0);
+    myButton.setLabel("");
+    myButton.setGroup(myGroup);
     
     myImage = new ImageControl();
     myGroup.addCanvas(myImage);

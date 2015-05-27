@@ -61,12 +61,14 @@ public class ChannelManagerUIElement {
     myGroup.setPosition(x, y);
   }
   
-  public PaletteUIElement getPaletteUIElement(Toggle t) {
-    //Gets the PaletteUIElement that t is in
-    //Should /probably/ just extend Toggle to be aware of its parent PaletteUIElement object
+  public PaletteUIElement getPaletteUIElement(Button b) {
+    //Gets the PaletteUIElement that b is in
+    //Should /probably/ just extend Button to be aware of its parent PaletteUIElement object
+    if (children == null) return null;
     for (ChannelUIElement cuie : children) {
+      if (cuie.children == null) continue;
       for (PaletteUIElement puie : cuie.children) {
-        if (puie.myToggle == t) return puie;
+        if (puie.myButton == b) return puie;
       }
     }
     return null;

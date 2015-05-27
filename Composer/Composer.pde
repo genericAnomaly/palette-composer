@@ -198,19 +198,22 @@ public void controlEvent(ControlEvent theEvent) {
     if (theEvent.getController() == bLoadImage) selectInput("Select sprite to load", "onLoadSpriteSelected"); 
     if (theEvent.getController() == bLoadJSON) selectInput("Select palette file to load", "onLoadJSONSelected");
     
-    if (theEvent.getController() instanceof Toggle) {
-      println("Toggle fired");
-      Toggle t = (Toggle) theEvent.getController();
-      PaletteUIElement source = uiChannelManager.getPaletteUIElement(t);
+    
+    //TODO: Move all this stuff into a custom handler inside ChannelManagerUIElement
+    if (theEvent.getController() instanceof Button) {
+      println("Button fired");
+      Button b = (Button) theEvent.getController();
+      PaletteUIElement source = uiChannelManager.getPaletteUIElement(b);
+      if (source == null) {
+        return;
+      }
       println("Source: " + source.myPalette);
       source.parent.highlightElement(source);
-
-      //TODO: Move all this stuff into a custom handler inside ChannelManagerUIElement
       if (baseSprite == null) return;
       PImage change = source.paletteSwap(baseSprite);
       iPreview.addLayer(change);
-      
     }
+    
     
   }
 }

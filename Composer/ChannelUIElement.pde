@@ -46,12 +46,12 @@ public class ChannelUIElement {
   
   public void highlightElement(PaletteUIElement p) {
     for (PaletteUIElement puie : children) {
-      //puie.myToggle.listen(false);
-      //puie.myToggle.setInternalValue(0);
-      //puie.myToggle.listen(true);
+      //puie.myButton.listen(false);
+      //puie.myButton.setInternalValue(0);
+      //puie.myButton.listen(true);
       //TODO: UUUUUGH this is SO IRRITATING I guess I'll probably just switch to buttons and like, change their colors when they become active or whatevs.
     }
-  //  p.myToggle.setValue(true);
+  //  p.myButton.setValue(true);
     //TODO: fix all this direct access of foreigh class members in the *UIElement classes. I wrote this way the heck too late at night.
     //TODO: While we're at it, fix up the spaghetti code handling clicking a PaletteUIElement to be more OO consistent and less horrible.
   }
