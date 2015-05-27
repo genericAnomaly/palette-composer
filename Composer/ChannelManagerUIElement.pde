@@ -30,6 +30,7 @@ public class ChannelManagerUIElement {
   }
   
   private void buildElement() {
+    //No noLoop() loop() here because this should only ever be getting called in the PApplet.setup() method
     myGroup = cp5.addGroup("Channel Manager");
     myGroup.setBackgroundColor(LAYOUT_COLOR_PANELS);
     myGroup.disableCollapse();
@@ -37,15 +38,14 @@ public class ChannelManagerUIElement {
   }
   
   public void sortElements() {
-    //TODO
     if (children != null) {
       int i = 0;
-      int y = LAYOUT_SIZE_GUTTER + myGroup.getBarHeight();
+      int y = LAYOUT_PANEL_GUTTER + myGroup.getBarHeight();
       for (ChannelUIElement child : children) {
-        child.setPosition(LAYOUT_SIZE_GUTTER, y);
-        child.setSize(myGroup.getWidth() - LAYOUT_SIZE_GUTTER*2, 62); //TODO: method for channel to set its own height based on children
+        child.setPosition(LAYOUT_PANEL_GUTTER, y);
+        child.setSize(myGroup.getWidth() - LAYOUT_PANEL_GUTTER*2, 62); //TODO: method for channel to set its own height based on children
         y += child.myGroup.getBarHeight();
-        y += LAYOUT_SIZE_GUTTER;
+        y += LAYOUT_PANEL_GUTTER;
         if (child.myGroup.isOpen()) y += 62; //child.myGroup.getHeight(); <-- same TODO, getHeight doesn't work for some reason
         //println(channelPanel.getName() + " isOpen() = " + channelPanel.isOpen() + ", getHeight() = " + channelPanel.getHeight() );
       }

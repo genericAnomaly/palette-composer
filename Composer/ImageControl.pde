@@ -51,10 +51,9 @@ class ImageControl extends Canvas {
         p.image(rendered, 0, 0);
       }
     } catch (Exception e) {
-      //TODO: This damn thing keeps firing off pervasively during normal use.
-      //It can be recreated by passing setImage a null value
+      //I think this is mostly dealt with. Not necessarily ideally but it's not tripping anymore. Leaving this here for now.
       //e.printStackTrace();
-      print("#"); //easier than a frickin' 30 line stack trace every frame
+      print("#");
     }
     p.popMatrix();
   }
@@ -67,6 +66,7 @@ class ImageControl extends Canvas {
     x = px;
     y = py;
   }
+  
   public void setSize(int pw, int ph) {
     if (w < 1) w = 1;
     if (h < 1) h = 1;
@@ -74,6 +74,7 @@ class ImageControl extends Canvas {
     h = ph;
     if (content != null) renderContent();
   }
+  
   public void setImage(PImage i) {
     if (i == null) return;  //TODO: throw an exception maybe?
     content = i;
@@ -88,12 +89,11 @@ class ImageControl extends Canvas {
     composite.image(layer, 0, 0);
     composite.endDraw();
     setImage(composite);
-    
   }
 
   //Function to prepare copy content to rendered at a suitable size and position for display
   private void renderContent() {
-    //Use isRendering to ensure renderContent never runs simultaneously
+    //Use isRendering to ensure renderContent never steps on its own toes. Should never actually be an issue.
     if (isRendering) return;
     isRendering = true;
     //Initialise the PGraphics object

@@ -58,11 +58,11 @@ public class ChannelUIElement {
   
   public void sortElements() {
     //TODO
-    int x = LAYOUT_SIZE_GUTTER;
+    int x = LAYOUT_PANEL_GUTTER;
     for (PaletteUIElement child : children) {
-      child.setPosition(x, LAYOUT_SIZE_GUTTER);
+      child.setPosition(x, LAYOUT_PANEL_GUTTER);
       x += child.getWidth();
-      x += LAYOUT_SIZE_GUTTER; 
+      x += LAYOUT_PANEL_GUTTER; 
     }
   }
   

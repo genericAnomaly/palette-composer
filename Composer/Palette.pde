@@ -52,7 +52,14 @@ public class Palette {
   
   public String[] toStringArray() {
     //TODO
-    return new String[]{"TODO"};
+    String[] strings = new String[colors.length];
+    for (int i=0; i<colors.length; i++) {
+      String s = Integer.toHexString(awtColorToInt(colors[i]));
+      s = "#" + s.substring(2);
+      strings[i] = s;
+    }
+    //return new String[]{"TODO"};
+    return strings;
   }
   
   
@@ -74,7 +81,15 @@ public class Palette {
   }
   
   public String toString() {
-    return toString("  ");
+    //return toString("  ");
+    String[] strings = toStringArray();
+    String s = "[Palette] {";
+    for (int i=0; i<strings.length; i++) {
+      s += strings[i];
+      if (i+1 < strings.length) s += ", ";
+    }
+    s += "}";
+    return s;
   }
   
   public String toString(String i) {

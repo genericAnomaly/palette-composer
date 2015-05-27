@@ -10,23 +10,23 @@ import java.util.ArrayList;
 import controlP5.*;
 
 
-//UI Constants
-int LAYOUT_SIZE_GUTTER = 6;
-int LAYOUT_SIZE_TOOLBAR = 20;
-int LAYOUT_MINIMUM_WIDTH = 640;
-int LAYOUT_MINIMUM_HEIGHT = 480;
+//UI size constants
+final int LAYOUT_PANEL_GUTTER = 6;
+final int LAYOUT_IMAGE_GUTTER = 8;
+final int LAYOUT_TOOLBAR_HEIGHT = 20;
+final int LAYOUT_FRAME_MINIMUM_WIDTH = 640;
+final int LAYOUT_FRAME_MINIMUM_HEIGHT = 480;
+final int LAYOUT_CHANNEL_MINIMUM_HEIGHT = 32;
 
-int LAYOUT_CHANNEL_MINIMUM_HEIGHT = 32;
-int LAYOUT_IMAGE_GUTTER = 8;
+final int LAYOUT_PALETTE_MAX_ROWS = 4;
+final int LAYOUT_PALETTE_SQUARE_SIZE = 8;
 
-int LAYOUT_PALETTE_MAX_ROWS = 4;
-int LAYOUT_PALETTE_SQUARE_SIZE = 8;
-
-//UI COLORS
-int LAYOUT_COLOR_BG = 80;
-int LAYOUT_COLOR_PANELS = 96;
-int LAYOUT_COLOR_TOOLBAR = 127;
-int LAYOUT_COLOR_CHANNELS = 108;
+//UI color constants
+final int LAYOUT_COLOR_BG = 80;
+final int LAYOUT_COLOR_PANELS = 96;
+final int LAYOUT_COLOR_TOOLBAR = 127;
+final int LAYOUT_COLOR_CHANNELS = 108;
+//TODO: buttons and palettes
 
 //ControlP5 UI Elements
 ControlP5 cp5;
@@ -54,7 +54,7 @@ ArrayList<Channel> channels;
 
 public void setup(){
   //Size the frame
-  size(640, 480);
+  size(LAYOUT_FRAME_MINIMUM_WIDTH, LAYOUT_FRAME_MINIMUM_HEIGHT);
   
   //Build the UI
   buildUIElements();
@@ -63,7 +63,7 @@ public void setup(){
   if (frame != null) {
     frame.setTitle("Palette Composer");
     frame.setResizable(true);
-    frame.setMinimumSize(new Dimension(LAYOUT_MINIMUM_WIDTH, LAYOUT_MINIMUM_HEIGHT));
+    frame.setMinimumSize(new Dimension(LAYOUT_FRAME_MINIMUM_WIDTH, LAYOUT_FRAME_MINIMUM_HEIGHT));
     frame.addComponentListener(new FrameListener());
     
     JRootPane pane = ( (JFrame) frame).getRootPane();
@@ -152,32 +152,32 @@ public void buildUIElements () {
 
 public void sortUIElements(int paneWidth, int paneHeight) {
   //Calculate common size values
-  float panelThird = (paneWidth - 4*LAYOUT_SIZE_GUTTER)/10;
+  float panelThird = (paneWidth - 4*LAYOUT_PANEL_GUTTER)/10;
   int panelSide = floor(3*panelThird);
-  int panelTop = LAYOUT_SIZE_GUTTER + LAYOUT_SIZE_TOOLBAR + gBase.getBarHeight();
-  int channelManTop = panelTop + panelSide + LAYOUT_SIZE_GUTTER + gBase.getBarHeight();  //don't bother delving, just assume everyone's got the same bar height
+  int panelTop = LAYOUT_PANEL_GUTTER + LAYOUT_TOOLBAR_HEIGHT + gBase.getBarHeight();
+  int channelManTop = panelTop + panelSide + LAYOUT_PANEL_GUTTER + gBase.getBarHeight();  //don't bother delving, just assume everyone's got the same bar height
   
   //Toolbar
   gToolbar.setPosition(0, 0);
-  gToolbar.setSize(paneWidth, LAYOUT_SIZE_TOOLBAR );
+  gToolbar.setSize(paneWidth, LAYOUT_TOOLBAR_HEIGHT );
   
   //Base Sprite Panel
-  gBase.setPosition(LAYOUT_SIZE_GUTTER, panelTop );
+  gBase.setPosition(LAYOUT_PANEL_GUTTER, panelTop );
   gBase.setSize(panelSide, panelSide);
   iBase.setSize(panelSide, panelSide);
   
   //Preview Sprite Panel
-  gPreview.setPosition(LAYOUT_SIZE_GUTTER*2 + panelSide, panelTop);
+  gPreview.setPosition(LAYOUT_PANEL_GUTTER*2 + panelSide, panelTop);
   gPreview.setSize(panelSide, panelSide);
   iPreview.setSize(panelSide, panelSide);
   
   //Mixer Panel
-  gMixer.setPosition(LAYOUT_SIZE_GUTTER*3 + 2*panelSide, panelTop);
-  gMixer.setSize( paneWidth - (2*panelSide+4*LAYOUT_SIZE_GUTTER), panelSide);
+  gMixer.setPosition(LAYOUT_PANEL_GUTTER*3 + 2*panelSide, panelTop);
+  gMixer.setSize( paneWidth - (2*panelSide+4*LAYOUT_PANEL_GUTTER), panelSide);
   
   //Channel Manager UI Element
-  uiChannelManager.setPosition(LAYOUT_SIZE_GUTTER, channelManTop);
-  uiChannelManager.setSize(paneWidth - LAYOUT_SIZE_GUTTER*2, panelSide);
+  uiChannelManager.setPosition(LAYOUT_PANEL_GUTTER, channelManTop);
+  uiChannelManager.setSize(paneWidth - LAYOUT_PANEL_GUTTER*2, panelSide);
   
 }
 
