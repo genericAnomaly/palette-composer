@@ -40,27 +40,21 @@ Group gChannels;
 ImageControl iBase;
 ImageControl iPreview;
 
-Button bSave;
 Button bLoadImage;
 Button bLoadJSON;
+Button bSave;
 
 ChannelManagerUIElement uiChannelManager;
 
-ArrayList<Group> gChannelList;
 
-
-//Vars
+//Working data
 PImage baseSprite;
 ArrayList<Channel> channels;
-PImage testPI;
-Boolean testLoad = false;
+
 
 public void setup(){
   //Size the frame
   size(640, 480);
-  
-  //Initialise ArrayLists empty to avoid having to check for null all the time
-  gChannelList = new ArrayList<Group>();
   
   //Build the UI
   buildUIElements();
@@ -81,14 +75,7 @@ public void setup(){
 
 void draw() {
   background(LAYOUT_COLOR_BG);
-  
-  
-//  if (testPI != null) {
-//    PImage pi = testPI;
-//    image(pi, 320, 460, 40, 40);
-//  }
-  
-  if (testLoad) testLoadJSON();
+
 }
 
 
@@ -200,7 +187,6 @@ public void sortUIElements(int paneWidth, int paneHeight) {
 
 
 public void controlEvent(ControlEvent theEvent) {
-  //println(theEvent.getController());
   if (theEvent.isGroup()) {
     if ( uiChannelManager.children != null ) {
       for (ChannelUIElement cuie : uiChannelManager.children) {
@@ -211,7 +197,6 @@ public void controlEvent(ControlEvent theEvent) {
   if (theEvent.isController()){
     if (theEvent.getController() == bLoadImage) selectInput("Select sprite to load", "onLoadSpriteSelected"); 
     if (theEvent.getController() == bLoadJSON) selectInput("Select palette file to load", "onLoadJSONSelected");
-    if (theEvent.getController() == bSave) testLoad = true;
     
     if (theEvent.getController() instanceof Toggle) {
       println("Toggle fired");
@@ -219,15 +204,10 @@ public void controlEvent(ControlEvent theEvent) {
       PaletteUIElement source = uiChannelManager.getPaletteUIElement(t);
       println("Source: " + source.myPalette);
       source.parent.highlightElement(source);
+
+      //TODO: Move all this stuff into a custom handler inside ChannelManagerUIElement
+      if (baseSprite == null) return;
       PImage change = source.paletteSwap(baseSprite);
-      
-      //this is all mega sloppy and will be tidied up shortly.
-//      PGraphics swapped = createGraphics(baseSprite.width, baseSprite.height);
-//      swapped.beginDraw();
-//      swapped.image(baseSprite, 0, 0);
-//      swapped.image(change, 0, 0);
-//      swapped.endDraw();
-//      iPreview.setImage(swapped);
       iPreview.addLayer(change);
       
     }
@@ -274,34 +254,25 @@ public void loadJSON(JSONObject json) {
   String[] channelNames = JSONHelper.getKeyArray(json);
   //Initialise and reserve space in the channels ArrayList
   channels = new ArrayList<Channel>(channelNames.length);
-  
+  //Try to read them in
   for (String channel : channelNames) {
     JSONArray jarray;
-    jarray = json.getJSONArray(channel); //TODO: put this back in the trycatch and add loop() to the catcher.
     try {
-      //jarray = json.getJSONArray(channel);
+      jarray = json.getJSONArray(channel);
     } catch (Exception e) {
       println("[ERROR] Exception occured while attempting to parse your channels! Please make sure your file is valid and try again.");
-      e.printStackTrace();
+      //This error will occur if you have non-array values in channel keys
+      //e.printStackTrace();
       return;
     }
     channels.add( new Channel(channel, jarray) );
   }
-  
-  //TODO: this loop's debug, pull it any time
-  for (Channel c : channels) {
-    //println(c);
-  }
-  
-  //TODO: Panels for each channel
-  //buildChannelPanels();
-  noLoop();
+  //Pass the channels we loaded to the ChannelManagerUIElement
   uiChannelManager.loadChannels(channels);
-  loop();
 }
 
 
-
+/*
 public void disposeChannelPanels () {
   if (gChannelList != null) {
     //TODO: Make sure this is properly disposing of the UI elements within gChannelList
@@ -309,49 +280,7 @@ public void disposeChannelPanels () {
   }
   gChannelList = new ArrayList<Group>();
 }
-
-public void buildChannelPanels () {
-  //Turn off the draw loop during modifications to the UI to try to squelch that ConcurrentModificationException
-  noLoop();
-  
-  //TODO
-  disposeChannelPanels();
-  gChannelList = new ArrayList<Group>(channels.size());
-  
-  
-  for (Channel c : channels) {
-    ChannelUIElement cuie = new ChannelUIElement(c);
-    cuie.setGroup(gChannels);
-  }
-  
-  /*
-  for (Channel c : channels) {
-    println("Loading channel " + c.name);
-    Group channelPanel = cp5.addGroup(c.name);
-    //channelPanel.disableCollapse();
-    channelPanel.setMoveable(false);
-    channelPanel.setBackgroundColor(LAYOUT_COLOR_CHANNELS);
-    channelPanel.activateEvent(true);
-    channelPanel.setGroup(gChannels);
-    gChannelList.add(channelPanel);
-    
-    //Now add Palettes
-    PaletteUIElement puie = new PaletteUIElement(c, c.base, "base");
-    puie.setGroup(channelPanel);
-
-  }
-  */
-  
-  sortUIElements(width, height);
-  
-  try{ 
-    Thread.sleep(200);
-  } catch (Exception e) {
-    
-  }
-  
-  loop();
-}
+*/
 
 
 void testLoadJSON() {

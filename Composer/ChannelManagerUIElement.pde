@@ -9,14 +9,24 @@ public class ChannelManagerUIElement {
   }
   
   public void loadChannels(ArrayList<Channel> channels) {
-    //TODO
+    //Must disable draw loop when adding elements to the UI. Failure to do so will cause ConcurrentModificationExceptions in the drawing thread
+    noLoop();
+    
+    //TODO: Properly dispose of any existing ChannelUIElements!
+    
+    //Initialise and populate the children ArrayList
     children = new ArrayList<ChannelUIElement>(channels.size());
     for (Channel c : channels) {
       ChannelUIElement cuie = new ChannelUIElement(c);
       cuie.setGroup(myGroup);
       children.add(cuie);
     }
+    
+    //Call sortElements to ensure the new elements are laid out properly
     sortElements();
+    
+    //Re-enable the draw loop
+    loop();
   }
   
   private void buildElement() {
