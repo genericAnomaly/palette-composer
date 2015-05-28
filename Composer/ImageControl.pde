@@ -30,13 +30,13 @@ class ImageControl extends Canvas {
     y = 0;
     w = 32;
     h = 32;
-    content = createImage(w, h, RGB);
-    content.loadPixels();
-    int dim = w*h;
+    content = createImage(w, h, ARGB);
+//    content.loadPixels();
+//    int dim = w*h;
     //for (int i=0; i<dim; i++) content.pixels[i] = color(i%256, 256-i%256, abs(i%512-256) );
     //for (int i=0; i<dim; i++) content.pixels[i] = color(abs((i/4)%512-256), abs((i+128)%512-256), abs(i%512-256) );
-    for (int i=0; i<dim; i++) content.pixels[i] = color( 191 + 64*(i%2), 0.5 );
-    content.updatePixels();
+//    for (int i=0; i<dim; i++) content.pixels[i] = color( 191 + 64*(i%2), 0.5 );
+//    content.updatePixels();
     renderContent();
     dropShadow = false;
   }

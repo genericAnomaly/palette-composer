@@ -32,7 +32,7 @@ public class PaletteUIElement {
     if (myWidth < myHeight) myWidth = myHeight;
     
     myGroup = cp5.addGroup(myChannel.name + "_" + name);
-    myGroup.setPosition(LAYOUT_PANEL_GUTTER, LAYOUT_PANEL_GUTTER);
+    //myGroup.setPosition(LAYOUT_PANEL_GUTTER, LAYOUT_PANEL_GUTTER);
     myGroup.setSize(myWidth, myHeight);
     myGroup.setMoveable(false);
     myGroup.disableCollapse();

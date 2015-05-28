@@ -12,6 +12,7 @@ import controlP5.*;
 
 //UI size constants
 final int LAYOUT_PANEL_GUTTER = 3;
+final int LAYOUT_PANEL_PADDING = 6;
 final int LAYOUT_IMAGE_PADDING = 8;
 final int LAYOUT_PALETTE_PADDING = 6;
 final int LAYOUT_CHANNEL_MINIMUM_HEIGHT = 32;
@@ -30,8 +31,8 @@ final int LAYOUT_COLOR_TOOLBAR = #888888;
 final int LAYOUT_COLOR_CHANNELS = #777777;
 //TODO: buttons and palettes
 final int LAYOUT_COLOR_DEFAULT_NEUTRAL = #444444;
-final int LAYOUT_COLOR_DEFAULT_HOVER = #ffcc00;
-final int LAYOUT_COLOR_DEFAULT_CLICK = #cc9900;
+final int LAYOUT_COLOR_DEFAULT_HOVER = #cc9900;
+final int LAYOUT_COLOR_DEFAULT_CLICK = #ffcc00;
 final int LAYOUT_COLOR_DEFAULT_LABEL_CAPTION = #ffffff;
 final int LAYOUT_COLOR_DEFAULT_LABEL_VALUE = #ffffff;
 final int LAYOUT_COLOR_PALETTE_NEUTRAL = 0x00000000;
@@ -100,7 +101,7 @@ void draw() {
 public void buildUIElements () {
   //Create CP5
   cp5 = new ControlP5(this);
-  cp5.enableShortcuts();
+  //cp5.enableShortcuts();
   
   //Create colors
   cDefault = new CColor(LAYOUT_COLOR_DEFAULT_HOVER, LAYOUT_COLOR_DEFAULT_NEUTRAL, LAYOUT_COLOR_DEFAULT_CLICK, LAYOUT_COLOR_DEFAULT_LABEL_CAPTION, LAYOUT_COLOR_DEFAULT_LABEL_VALUE);
@@ -153,10 +154,11 @@ public void buildUIElements () {
   
   
   //Mixer Panel   ==============================================
-  gMixer = cp5.addGroup("Palette Mixer");
-  gMixer.setBackgroundColor(LAYOUT_COLOR_PANELS);
-  gMixer.disableCollapse();
-  gMixer.setMoveable(false);
+//  gMixer = cp5.addGroup("Palette Mixer");
+//  gMixer.setBackgroundColor(LAYOUT_COLOR_PANELS);
+//  gMixer.disableCollapse();
+//  gMixer.setMoveable(false);
+  gMixer = new MixerUIElement().myGroup;
   
   
   //Channel Manager Panel  =====================================
