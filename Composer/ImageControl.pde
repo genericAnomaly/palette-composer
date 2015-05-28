@@ -4,6 +4,9 @@ class ImageControl extends Canvas {
   PImage content;
   PGraphics rendered;
   
+  //State
+  Boolean isRendering = false;
+  
   //Location
   float x;
   float y;
@@ -30,7 +33,9 @@ class ImageControl extends Canvas {
     content = createImage(w, h, RGB);
     content.loadPixels();
     int dim = w*h;
-    for (int i=0; i<dim; i++) content.pixels[i] = color(i%256, 256-i%256, abs(i%512-256) );
+    //for (int i=0; i<dim; i++) content.pixels[i] = color(i%256, 256-i%256, abs(i%512-256) );
+    //for (int i=0; i<dim; i++) content.pixels[i] = color(abs((i/4)%512-256), abs((i+128)%512-256), abs(i%512-256) );
+    for (int i=0; i<dim; i++) content.pixels[i] = color( 191 + 64*(i%2), 0.5 );
     content.updatePixels();
     renderContent();
     dropShadow = false;
@@ -42,11 +47,13 @@ class ImageControl extends Canvas {
     p.translate(x, y);
     //if (dropShadow) image(shadow, 0, 0);
     try {
-      if (rendered != null) {
+      if (rendered != null && rendered.canDraw()) {
         p.image(rendered, 0, 0);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      //I think this is mostly dealt with. Not necessarily ideally but it's not tripping anymore. Leaving this here for now.
+      //e.printStackTrace();
+      print("#");
     }
     p.popMatrix();
   }
@@ -59,6 +66,7 @@ class ImageControl extends Canvas {
     x = px;
     y = py;
   }
+  
   public void setSize(int pw, int ph) {
     if (w < 1) w = 1;
     if (h < 1) h = 1;
@@ -66,18 +74,35 @@ class ImageControl extends Canvas {
     h = ph;
     if (content != null) renderContent();
   }
+  
   public void setImage(PImage i) {
+    if (i == null) return;  //TODO: throw an exception maybe?
     content = i;
     renderContent();
+  }
+  
+  public void addLayer(PImage layer) {
+    //destructively layer a new image onto the current image.
+    PGraphics composite = createGraphics(content.width, content.height);
+    composite.beginDraw();
+    composite.image(content, 0, 0);
+    composite.image(layer, 0, 0);
+    composite.endDraw();
+    setImage(composite);
   }
 
   //Function to prepare copy content to rendered at a suitable size and position for display
   private void renderContent() {
+    //Use isRendering to ensure renderContent never steps on its own toes. Should never actually be an issue.
+    if (isRendering) return;
+    isRendering = true;
     //Initialise the PGraphics object
-    rendered = createGraphics(w, h);
+    PGraphics render = createGraphics(w, h);
+    //Work from a method variable to prevent issues with content being changed during execution by other threads
+    PImage source = content;
     //Figure out what scale will fill the panel, respecting global gutters on ImageControl objects
-    float scaleX = (rendered.width-LAYOUT_IMAGE_GUTTER)/((float) content.width);
-    float scaleY = (rendered.height-LAYOUT_IMAGE_GUTTER)/((float) content.height);
+    float scaleX = (render.width-LAYOUT_IMAGE_PADDING)/((float) source.width);
+    float scaleY = (render.height-LAYOUT_IMAGE_PADDING)/((float) source.height);
     //For scales above 100%, use multiples of 100% only!
     if (scaleX>1) scaleX = floor(scaleX);
     if (scaleY>1) scaleY = floor(scaleY); 
@@ -85,13 +110,15 @@ class ImageControl extends Canvas {
     float scaleBoth = scaleX;
     if (scaleY < scaleX) scaleBoth = scaleY;
     //Draw it to the PGraphics object
-    rendered.beginDraw();
+    render.beginDraw();
     //noSmooth is critical, otherwise scaling up causes interpolation, the WORST THING IN THE WORLD
-    if (scaleBoth>1) rendered.noSmooth();
+    if (scaleBoth>1) render.noSmooth();
     //Draw it to the center (that's all that ugly as doubleheck math is for)
-    rendered.image(content, (rendered.width-content.width*scaleBoth)/2, (rendered.height-content.height*scaleBoth)/2, content.width*scaleBoth, content.height*scaleBoth);
+    render.image(content, (render.width-source.width*scaleBoth)/2, (render.height-source.height*scaleBoth)/2, source.width*scaleBoth, source.height*scaleBoth);
     //Finalise the graphic
-    rendered.endDraw();
+    render.endDraw();
+    rendered = render;
+    isRendering = false;
   }
 
 
