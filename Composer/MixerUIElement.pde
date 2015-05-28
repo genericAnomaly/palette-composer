@@ -7,6 +7,7 @@ public class MixerUIElement {
   Textfield vH, vS, vV;
   
   Button bWheel;
+  Slider2D sWheel;
   Slider sValue;
   int wheelSize = 64;
   
@@ -35,6 +36,13 @@ public class MixerUIElement {
     bWheel.updateSize();
     bWheel.setGroup(myGroup);
     bWheel.addListener(myListener);
+    
+    sWheel = cp5.addSlider2D("Wheel Reader");
+    sWheel.setSize(bWheel.getWidth(), bWheel.getHeight());
+    sWheel.setGroup(myGroup);
+    sWheel.addListener(myListener);
+    //bWheel.setColors( new CColor(0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000);
+    sWheel.setVisible(false);
     
     sValue = cp5.addSlider("Value");
     sValue.setRange(0.0, 1.0);
@@ -77,6 +85,7 @@ public class MixerUIElement {
     int yValues = LAYOUT_PANEL_PADDING;
     
     bWheel.setPosition(xValues, yValues);
+    sWheel.setPosition(xValues, yValues);
     sValue.setPosition(xValues, yValues + bWheel.getHeight() + LAYOUT_PANEL_PADDING);
     xValues += bWheel.getWidth() + LAYOUT_PANEL_PADDING*2;
     
