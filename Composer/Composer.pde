@@ -11,32 +11,42 @@ import controlP5.*;
 
 
 //UI size constants
-final int LAYOUT_PANEL_GUTTER = 6;
-final int LAYOUT_IMAGE_GUTTER = 8;
+final int LAYOUT_PANEL_GUTTER = 3;
+final int LAYOUT_IMAGE_PADDING = 8;
+final int LAYOUT_PALETTE_PADDING = 6;
+final int LAYOUT_CHANNEL_MINIMUM_HEIGHT = 32;
 final int LAYOUT_TOOLBAR_HEIGHT = 20;
 final int LAYOUT_FRAME_MINIMUM_WIDTH = 640;
 final int LAYOUT_FRAME_MINIMUM_HEIGHT = 480;
-final int LAYOUT_CHANNEL_MINIMUM_HEIGHT = 32;
+
 
 final int LAYOUT_PALETTE_MAX_ROWS = 4;
 final int LAYOUT_PALETTE_SQUARE_SIZE = 8;
 
 //UI color constants
-final int LAYOUT_COLOR_BG = 80;
-final int LAYOUT_COLOR_PANELS = 96;
-final int LAYOUT_COLOR_TOOLBAR = 127;
-final int LAYOUT_COLOR_CHANNELS = 108;
+final int LAYOUT_COLOR_BG = #333333;
+final int LAYOUT_COLOR_PANELS = #666666;
+final int LAYOUT_COLOR_TOOLBAR = #888888;
+final int LAYOUT_COLOR_CHANNELS = #777777;
 //TODO: buttons and palettes
-final int LAYOUT_COLOR_BUTTON_NEUTRAL;
-final int LAYOUT_COLOR_BUTTON_HOVER;
-final int LAYOUT_COLOR_BUTTON_CLICK;
-final int LAYOUT_COLOR_LABEL_CAPTION;
-final int LAYOUT_COLOR_LABEL_VALUE;
+final int LAYOUT_COLOR_DEFAULT_NEUTRAL = #444444;
+final int LAYOUT_COLOR_DEFAULT_HOVER = #ffcc00;
+final int LAYOUT_COLOR_DEFAULT_CLICK = #cc9900;
+final int LAYOUT_COLOR_DEFAULT_LABEL_CAPTION = #ffffff;
+final int LAYOUT_COLOR_DEFAULT_LABEL_VALUE = #ffffff;
+final int LAYOUT_COLOR_PALETTE_NEUTRAL = 0x00000000;
+final int LAYOUT_COLOR_PALETTE_HOVER = #ffffff;
+final int LAYOUT_COLOR_PALLETE_CLICK = #ffcc00;
+final int LAYOUT_COLOR_PALLETE_SELECTED = #ffcc00;
   //bCol = new CColor( #ff0000, #00ff00, #0000ff, #FFFF00, #00FFFF);
   //Hover, Default, Onclick, LabelOver, LabelOffset
 
+
 //ControlP5 UI Elements
 ControlP5 cp5;
+
+CColor cDefault;
+CColor cPalette;
 
 Group gToolbar;
 Group gBase;
@@ -92,6 +102,11 @@ public void buildUIElements () {
   cp5 = new ControlP5(this);
   cp5.enableShortcuts();
   
+  //Create colors
+  cDefault = new CColor(LAYOUT_COLOR_DEFAULT_HOVER, LAYOUT_COLOR_DEFAULT_NEUTRAL, LAYOUT_COLOR_DEFAULT_CLICK, LAYOUT_COLOR_DEFAULT_LABEL_CAPTION, LAYOUT_COLOR_DEFAULT_LABEL_VALUE);
+  cp5.setColor(cDefault);
+
+ 
   //Toolbar  ===================================================
   gToolbar = cp5.addGroup("Toolbar");
   gToolbar.hideBar();
@@ -145,10 +160,6 @@ public void buildUIElements () {
   
   
   //Channel Manager Panel  =====================================
-//  gChannels = cp5.addGroup("Channel Manager");
-//  gChannels.setBackgroundColor(LAYOUT_COLOR_PANELS);
-//  gChannels.disableCollapse();
-//  gChannels.setMoveable(false);
   uiChannelManager = new ChannelManagerUIElement();
   
   sortUIElements(width, height);
@@ -184,7 +195,7 @@ public void sortUIElements(int paneWidth, int paneHeight) {
   
   //Channel Manager UI Element
   uiChannelManager.setPosition(LAYOUT_PANEL_GUTTER, channelManTop);
-  uiChannelManager.setSize(paneWidth - LAYOUT_PANEL_GUTTER*2, panelSide);
+  uiChannelManager.setSize(paneWidth - LAYOUT_PANEL_GUTTER*2, paneHeight - channelManTop - LAYOUT_PANEL_GUTTER);
   
 }
 

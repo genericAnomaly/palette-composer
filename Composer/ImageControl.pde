@@ -101,8 +101,8 @@ class ImageControl extends Canvas {
     //Work from a method variable to prevent issues with content being changed during execution by other threads
     PImage source = content;
     //Figure out what scale will fill the panel, respecting global gutters on ImageControl objects
-    float scaleX = (render.width-LAYOUT_IMAGE_GUTTER)/((float) source.width);
-    float scaleY = (render.height-LAYOUT_IMAGE_GUTTER)/((float) source.height);
+    float scaleX = (render.width-LAYOUT_IMAGE_PADDING)/((float) source.width);
+    float scaleY = (render.height-LAYOUT_IMAGE_PADDING)/((float) source.height);
     //For scales above 100%, use multiples of 100% only!
     if (scaleX>1) scaleX = floor(scaleX);
     if (scaleY>1) scaleY = floor(scaleY); 

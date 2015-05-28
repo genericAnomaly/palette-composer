@@ -43,11 +43,10 @@ public class ChannelManagerUIElement {
       int y = LAYOUT_PANEL_GUTTER + myGroup.getBarHeight();
       for (ChannelUIElement child : children) {
         child.setPosition(LAYOUT_PANEL_GUTTER, y);
-        child.setSize(myGroup.getWidth() - LAYOUT_PANEL_GUTTER*2, 62); //TODO: method for channel to set its own height based on children
+        child.setWidth(myGroup.getWidth() - LAYOUT_PANEL_GUTTER*2);
         y += child.myGroup.getBarHeight();
         y += LAYOUT_PANEL_GUTTER;
-        if (child.myGroup.isOpen()) y += 62; //child.myGroup.getHeight(); <-- same TODO, getHeight doesn't work for some reason
-        //println(channelPanel.getName() + " isOpen() = " + channelPanel.isOpen() + ", getHeight() = " + channelPanel.getHeight() );
+        if (child.myGroup.isOpen()) y += child.myGroup.getBackgroundHeight();
       }
     }
   }

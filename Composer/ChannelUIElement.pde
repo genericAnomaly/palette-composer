@@ -31,6 +31,9 @@ public class ChannelUIElement {
     puie.setGroup(myGroup);
     children.add(puie);
     
+    //Quickly calculate our target height based on 
+    myGroup.setBackgroundHeight(puie.myHeight + LAYOUT_PALETTE_PADDING*2);
+    
     int i=0;
     for (Palette p : myChannel.swaps) {
       puie = new PaletteUIElement(this, p, "" + i);
@@ -58,11 +61,11 @@ public class ChannelUIElement {
   
   public void sortElements() {
     //TODO
-    int x = LAYOUT_PANEL_GUTTER;
+    int x = LAYOUT_PALETTE_PADDING;
     for (PaletteUIElement child : children) {
-      child.setPosition(x, LAYOUT_PANEL_GUTTER);
+      child.setPosition(x, LAYOUT_PALETTE_PADDING);
       x += child.getWidth();
-      x += LAYOUT_PANEL_GUTTER; 
+      x += LAYOUT_PALETTE_PADDING; 
     }
   }
   
@@ -78,6 +81,10 @@ public class ChannelUIElement {
   public void setSize(int w, int h) {
     myGroup.setSize(w, h);
     //sortElements();
+  }
+  
+  public void setWidth(int w) {
+    myGroup.setWidth(w);
   }
   
   public void setPosition(int x, int y) {

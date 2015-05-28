@@ -9,6 +9,8 @@ public class PaletteUIElement {
   Button myButton;
   ImageControl myImage;
   
+  int myWidth;
+  int myHeight;
   String name;
   
   public PaletteUIElement(ChannelUIElement c, Palette p, String n) {
@@ -25,8 +27,8 @@ public class PaletteUIElement {
     if (rows > LAYOUT_PALETTE_MAX_ROWS) rows = LAYOUT_PALETTE_MAX_ROWS;
     int cols = ceil( (float) myPalette.getSize()/rows);
     
-    int myWidth = cols*LAYOUT_PALETTE_SQUARE_SIZE + 2*LAYOUT_IMAGE_GUTTER;
-    int myHeight = rows*LAYOUT_PALETTE_SQUARE_SIZE + 2*LAYOUT_IMAGE_GUTTER;
+    myWidth = cols*LAYOUT_PALETTE_SQUARE_SIZE + 2*LAYOUT_IMAGE_PADDING;
+    myHeight = rows*LAYOUT_PALETTE_SQUARE_SIZE + 2*LAYOUT_IMAGE_PADDING;
     if (myWidth < myHeight) myWidth = myHeight;
     
     myGroup = cp5.addGroup(myChannel.name + "_" + name);
