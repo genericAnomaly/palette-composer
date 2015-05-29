@@ -38,11 +38,12 @@ public class MixerUIElement {
     bWheel.addListener(myListener);
     
     sWheel = cp5.addSlider2D("Wheel Reader");
-    sWheel.setSize(bWheel.getWidth(), bWheel.getHeight());
+    sWheel.setSize(floor(bWheel.getWidth()+sWheel.getCursorWidth()), floor(bWheel.getHeight()+sWheel.getCursorHeight()));
     sWheel.setGroup(myGroup);
     sWheel.addListener(myListener);
-    //bWheel.setColors( new CColor(0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000);
-    sWheel.setVisible(false);
+    //sWheel.setColor( new CColor(0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000) );
+    sWheel.setView( new Slider2DReticleView() );
+    //sWheel.setVisible(false);
     
     sValue = cp5.addSlider("Value");
     sValue.setRange(0.0, 1.0);
@@ -143,8 +144,12 @@ public class MixerUIElement {
   }
   
   
-  
   public int hsvToRGB(float h, float s, float v) {
+    int[] rgb = hsvToRGBArray(h, s, v);
+    return color(rgb[0], rgb[1], rgb[2]); 
+  }
+  
+  public int[] hsvToRGBArray(float h, float s, float v) {
     //Sporked from http://www.easyrgb.com/index.php?X=MATH&H=21#text21
     int r, g, b;
     if (s == 0) {
@@ -194,7 +199,9 @@ public class MixerUIElement {
       g = floor(var_g * 255);
       b = floor(var_b * 255);
     }
-    return color(r, g, b);
+    //return color(r, g, b);
+    int[] rgb = {r, g, b};
+    return rgb;
   }
   
   
@@ -205,6 +212,16 @@ public class MixerUIElement {
   public void refreshWheel() {
     bWheel.setImage(generateColorWheel(wheelSize, pV));
   }
+  public void refreshValues() {
+    int[] rgb = hsvToRGBArray(pH, pS, pV);
+    vR.setText(Integer.toString(rgb[0]));
+    vG.setText(Integer.toString(rgb[1]));
+    vB.setText(Integer.toString(rgb[2]));
+    vHex.setValue("#"+Integer.toHexString(color(rgb[0], rgb[1], rgb[2])).substring(2));
+    vH.setText(Integer.toString(floor(pH*100)));
+    vS.setText(Integer.toString(floor(pS*100)));
+    vV.setText(Integer.toString(floor(pV*100)));
+  }
   
   
   class MixerControlListener implements ControlListener {
@@ -214,8 +231,9 @@ public class MixerUIElement {
         pV = sValue.getValue();
         refreshWheel();
         refreshSlider();
+        refreshValues();
       }
-      if (theEvent.getController() == bWheel) {
+      if (theEvent.getController() == sWheel) {
         //getAbsolutePosition() is not working on the Button controller but is working on Groups, gotta do some crunching
         int centerX = floor( bWheel.getParent().getAbsolutePosition().x + bWheel.getPosition().x ) + wheelSize;
         int centerY = floor( bWheel.getParent().getAbsolutePosition().y + bWheel.getPosition().y ) + wheelSize;
@@ -225,11 +243,12 @@ public class MixerUIElement {
         int y = mouseY - centerY;
         float dist = sqrt(x*x+y*y)/wheelSize;
         println("Trace. x = " + x + ", y = " + y + ", Dist = " + dist);
-        if (dist > 1) return;
+        if (dist > 1) dist = 1;
         float theta = atan2(y, x);
         pH = ( (theta/(2*PI))+1 ) % 1;
         pS = dist;
         refreshSlider();
+        refreshValues();
       }
       //col = (int)theEvent.getController().getValue();
     }
